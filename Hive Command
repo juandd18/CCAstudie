@@ -1,0 +1,73 @@
+//conectarse a mysql desde vm cdh. el password es cloudera
+mysql -u root -p 
+
+//muestra la lista de tablas de una base de datos
+
+sqoop list-tables \
+ --connect jdbc:mysql://localhost/retail_db \
+ --username cloudera --password cloudera
+ 
+ //importa una tabla a "/loudacre/customers_retails"
+ //The	--null-non-string option	tells	Sqoop	to	represent	null values	as	\N,	
+//which	makes	the	imported	data	compatible	with	Hive	and	Impala.
+ sqoop import \
+ --connect jdbc:mysql://localhost/retail_db \
+ --username root --password cloudera \
+ --table accounts \
+ --target-dir /loudacre/customers_retails \
+ --null-non-string '\\N'
+ 
+ //importar tabla eligiendo las columnas y haciendo filtros
+ sqoop import \
+ --connect jdbc:mysql://localhost/retail_db \
+ --username root --password cloudera \
+ --table accounts \
+ --target-dir /loudacre/customers_retails \
+ --null-non-string '\\N'
+ --columns "customerid,customer_fname"
+ --where "customer_fna='juan'"
+ 
+ 
+//ver los datos insertados
+hdfs dfs -cat /loudacre/customers_retails/part-m-00000 | head
+
+//importar una tabla con formato parquet
+sqoop import \
+ --connect jdbc:mysql://localhost/loudacre \
+ --username training --password training \
+ --table accounts \
+ --target-dir /loudacre/accounts_parquet \
+ --as-parquetfile
+ 
+ //para ver el archivo parquet (cambiar localhost por la ip verdadera) 
+ parquet-tools head hdfs://localhost/loudacre/accounts_parquet/
+ 
+ //importar una tabla con formato parquet y comprimido
+sqoop import \
+ --connect jdbc:mysql://localhost/loudacre \
+ --username training --password training \
+ --table accounts \
+ --target-dir /loudacre/accounts_parquet \
+ --compression-codec org.apache.hadoop.io.compress.SnappyCodec
+ --as-parquetfile
+ 
+ //importar todas las tablas con formato parquet
+sqoop import-all-tables \
+ --connect jdbc:mysql://localhost/loudacre \
+ --username training --password training \
+ --warehouse-dir /loudacre/retail_db \
+ --as-parquetfile
+ 
+ //Exportar tabla de nuevo a data base, export-dir (donde se encuentran los datos en hdfs)
+ //update-mode has two options: allowinsert, and updateonly. The updateonly mode will only update existing rows, never adding any new rows.
+ //The allowinsert mode will update existing rows, and also add new rows.
+ //table: The last option, --table tabladestino, specifies the destination table in the RDBMS.
+ sqoop export \
+ --connect jdbc:mysql://localhost/loudacre \
+ --username training --password training \
+ --export-dir /loudacre/accounts_parquet \
+ --update-mode allowinsert
+ --table tabladestino
+ 
+ 
+ 
