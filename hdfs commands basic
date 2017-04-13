@@ -1,0 +1,14 @@
+//pasa una carpeta a hdfs (/user/cca)
+hdfs dfs -put kb /user/cca
+
+//trae a el edge o computador (vm) un archivo del hdfs
+hdfs dfs -get /user/cca/kb/KBDOC-00300.html
+
+//muestra el listado de aplicaciones que hay Activas en yarn
+yarn application -list
+
+//muestra el listado de todas (activas y terminadas) las aplicaciones en yarn
+yarn application -list -appStates ALL
+
+//muestra el estado de una application por su ID (toca colocarlo)
+yarn application -status app-id
