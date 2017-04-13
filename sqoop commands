@@ -1,0 +1,64 @@
+
+
+//conectarse a mysql desde vm cdh. el password es cloudera
+mysql -u root -p 
+
+//muestra la lista de tablas de una base de datos
+sqoop list-tables \
+ --connect jdbc:mysql://localhost/retail_db \
+ --username root --password cloudera
+
+//solo evalua una query no la importa
+sqoop eval \
+--query "SELECT * FROM my_table LIMIT 5" \
+--connect jdbc:mysql://localhost/loudacre \
+--username root \
+--password cloudera
+
+//importa todas las tablas de una base de datos en la 
+//ubicacion dada por --warehouse-dir (colocar el nombre de una carpeta que contenga las tablas) 
+//the --null-non-string option tells Sqoop to represent null values as \N,
+//which makes the imported data compatible with Hive and Impala.
+sqoop import-all-tables --connect jdbc:mysql://localhost/retail_db \
+--username root --password cloudera \
+--warehouse-dir /user/cca/retail_db \
+--null-non-string '\\N'
+
+//importa una tabla a hdfs
+//--target-dir debe tener el nombre de la carpeta que contiene la info de la tabla (colocar el nombre de la tabla)
+sqoop import --connect jdbc:mysql://localhost/retail_db \
+--username root --password cloudera \
+--table customers --target-dir /user/cca/retail_db/customers \
+--null-non-string '\\N'
+ 
+ //importa una tabla a hdfs 
+ //se utiliza --where (filtro para insertar) y --columns (columnas a insertar)
+ sqoop import --connect jdbc:mysql://localhost/retail_db \
+ --username root --password cloudera --table customers \
+ --where "customer_state='CO'" --columns "customer_fname,customer_lname,customer_id" \
+ --target-dir /user/cca/retail_db/customers \
+ --null-non-string '\\N' 
+
+//importa una tabla a hdfs
+// --as-parquetfile  convierte la tabla en parquet
+//--as-avrodatafile convierte la tabla en avro
+//--compression-codec org.apache.hadoop.io.compress.SnappyCodec comprimida en snappy
+sqoop import --connect jdbc:mysql://localhost/retail_db --username root --password cloudera 
+--table customers --where "customer_state='CO'" --columns "customer_fname,customer_lname,customer_id" 
+--target-dir /user/cca/retail_db/customers --null-non-string '\\N' 
+--as-parquetfile 
+--compression-codec org.apache.hadoop.io.compress.SnappyCodec
+
+//para ver parquet files 
+parquet-tools head hdfs://localhost/user/cca/retail_db/customers/ce63899d-d9e3-4c75-a4c8-0d75bcb1988c.parquet
+
+//export files from hdfs to jdbc
+sqoop export \
+--connect jdbc:mysql://dbhost/retail_db \
+--username root --password cloudera \
+--export-dir /loudacre/recommender_output \
+--update-mode allowinsert \
+--table product_recommendations
+
+
+ 
