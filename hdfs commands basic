@@ -12,3 +12,9 @@ yarn application -list -appStates ALL
 
 //muestra el estado de una application por su ID (toca colocarlo)
 yarn application -status app-id
+
+//mata una application en yarn
+yarn application -kill <app-id>
+
+//muestra el log de la application 
+yarn logs -applicationId <app-id> | more
