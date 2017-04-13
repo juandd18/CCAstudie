@@ -47,8 +47,18 @@ val sep = filedos.map(x => x.split(x(19)))
 .map(x => (x(0),x(1).split(" ")(0),x(2),x(12),x(13) ) )
 //salida 2014-03-15:10:10:20,Sorrento,8cc3b47e-bd01-4482-b500-28f2342679af,33.6894754264,-117.543308253)
 
+//persist in disk
+import org.apache.spark.storage.StorageLevel
+myrdd.persist(StorageLevel.DISK_ONLY)
 
+//cache() is a synonym for persist() with no storage level specified
+myrdd.cache()
 
-
+//Replication—store partitions on two nodes
+–DISK_ONLY_2
+–MEMORY_AND_DISK_2
+–MEMORY_ONLY_2
+–MEMORY_AND_DISK_SER_2
+–MEMORY_ONLY_SER_2
 
 
