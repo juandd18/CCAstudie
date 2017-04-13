@@ -1,8 +1,16 @@
 
-
+// Cuidado contains se debe utilizar con comillas dobles
 val ipid = file.filter(x => x.toUpperCase.contains("HTML")).map(x => x.split(" ")(0)+"/"+x.split(" ")(2))
 ipid.saveAsTextFile("/loudacre/ipid")
 
+//Utilizar sc.wholeTextFiles Maps entire contents of each file in a directory to a single RDD element
+// or reads multiple files, one file per RDD element
+import scala.util.parsing.json.JSON
+val myrdd1 = sc.wholeTextFiles(mydir)
+val myrdd2 = myrdd1.
+map(pair => JSON.parseFull(pair._2).get.asInstanceOf[Map[String,String]])
+for (record <- myrdd2.take(2))
+    println(record.getOrElse("firstName",null))
 
 //read xml files
 import scala.xml._
@@ -29,7 +37,8 @@ def getAccount(activation: Node): String = {
 
 val xmlfi = xmlfiles.flatMap(x => getActivations(x._2)).map(x => getAccount(x)+":"+getModel(x))
 //return 9763:MeeToo 1.0, 426:Titanic 1000
-
+val account = activations.map(line => (line \ "account-number").text+":"+(line \ "model").text)
+//return 9763:MeeToo 1.0, 426:Titanic 1000
 
 // separa un archivo con diferentes separadores de campos (,/| etc)
 // se elige el caracter 19 que es siempre el identificador de un separador y se le envia al metodo x.split() 
@@ -37,5 +46,9 @@ val sep = filedos.map(x => x.split(x(19)))
 .filter(x => x.length == 14)
 .map(x => (x(0),x(1).split(" ")(0),x(2),x(12),x(13) ) )
 //salida 2014-03-15:10:10:20,Sorrento,8cc3b47e-bd01-4482-b500-28f2342679af,33.6894754264,-117.543308253)
+
+
+
+
 
 
