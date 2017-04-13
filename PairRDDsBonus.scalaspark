@@ -1,3 +1,15 @@
+
+//keyBy convierte el rdd en una tupla por el key especificado (key,valor)
+sc.textFile(logfile).
+keyBy(line => line.split(' ')(2))
+//salida =  (99788,56.38.234.188 - 99788 "GET /theme.css…)
+
+//cuenta cuantas veces existe un key
+val web_logs = sc.textFile("/user/cca/weblogs/*2.log").map(line => (line.split(' ')(2),1)).reduceByKey(_+_)
+
+// countByKey to determine how many users visited the site for each frequency.
+val histogram_logs = web_logs.map(line => line.swap).countByKey()
+
 val accountsdata="/loudacre/accounts/*"
    
 // Bonus 1: key accounts by postal/zip code
