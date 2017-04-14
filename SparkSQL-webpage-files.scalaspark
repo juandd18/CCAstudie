@@ -1,7 +1,116 @@
+//crear contexto
+val sqlContext = new HiveContext(sc)
+import sqlContext.implicits._
+
+//leer json file
+val peopleDF = sqlContext.read.json("people.json")
+
+//show tables in hive from spark sql
+sqlContext.sql("show tables").show()
+
+//crea tabla 
+sqlContext.sql("CREATE TABLE IF NOT EXISTS personas (key INT, value STRING)")
+
+//read table form hive or impala
+val customerDF = sqlContext.read.table("personas")
+
+//read from jdbc
+val productos = sqlContext.read.
+format("jdbc").
+option("url","jdbc:mysql://localhost/retail_db").
+option("dbtable","products").
+option("user","root").
+option("password","cloudera").
+load()
+
+val order_items = sqlContext.read.
+format("jdbc").
+option("url","jdbc:mysql://localhost/retail_db").
+option("dbtable","order_items").
+option("user","root").
+option("password","cloudera").
+load()
+
+//join 
+val joine_item_prod = order_items.as("order")
+.join(productos.as("prod"),$"order.order_item_product_id" === $"prod.product_id")
+
+//join con el mismo nombre en las dos tablas en diferente de join inner
+peopleDF.join(pcodesDF,Array("pcode"), "left_outer")
+
+//limit
+productos.limit(3).show()
+
+//select
+products.select($"product_name".alias("name"),$"product_price".alias("price")).show()
+
+//utilizacion de where i orderby (desc())
+products.where($"product_price" > 50).select($"product_name".alias("name"),$"product_price".alias("price"))
+.orderBy(desc("price")).show(3)
+//otra forma de hacer desc 
+orderBy($"price".desc)
+
+//register table for using with sql
+order_items.registerTempTable("orders")
+sqlContext.sql("select * from orders where order_item_subtotal > 100 order by order_item_subtotal desc limit 5").show()
+
+//saveAsTable saves as a Hive/Impala table (HiveContext only)
+peopleDF.write.saveAsTable("people")
+
+//format specifies a data source type
+–mode determines the behavior if file or table already exists:
+overwrite, append, ignore or error (default is error)
+–partitionBy stores data in partitioned directories in the form
+column=value (as with Hive/Impala partitioning)
+–options specifies properties for the target data source
+–save is the generic base function to write the data
+
+//write dataframe with options
+peopleDF.write.format("parquet").
+mode("append").
+partitionBy("age").
+saveAsTable("people")
+
+//imports
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.Row
+//creacion de squema 
+val schema = StructType(Array(
+StructField("age", IntegerType, true),
+StructField("name", StringType, true),
+StructField("pcode", StringType, true)))
+
+val rowrdd = sc.parallelize(Array(Row(40,"Abram","01601"),Row(16,"Lucia","87501")))
+//crear un dataframe de un rdd
+val mydf = sqlContext.createDataFrame(rowrdd,schema)
+
+--taller
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.Row
+val webpages_row = sc.textFile("/user/cca/webpage").map(line => line.split('\t')).map(x => Row(x(0).toInt,x(1),x(2)))
+val schema = StructType(Array(StructField("id", IntegerType, true),
+StructField("webpage", StringType, true),
+StructField("content", StringType, true)))
+val webpagesdf = sqlContext.createDataFrame(webpages_row,schema)
+
+val idcontent = webpagesdf.select($"id",$"content")
+val content = idcontent.map(row => (row.getAs[Int]("id"),row.getAs[String]("content")))
+.flatMapValues( x => x.split(','))
+val content_row = content.map(x => Row(x._1,x._2))
+val contentdf = sqlContext.createDataFrame(content_row,idcontent.schema)
+
+contentdf.write.
+mode("overwrite").
+parquet("/user/cca/webpage_files")
+
+parquet-tools schema hdfs://localhost/user/cca/webpage_files/part-r-00000-00464af4-afcb-43a5-83ec-17a8adc03d14.gz.parquet
+parquet-tools head hdfs://localhost/user/cca/webpage_files/part-r-00000-00464af4-afcb-43a5-83ec-17a8adc03d14.gz.parquet
+
+
 // Before running solution, import webpage table using Sqoop:
 // sqoop import --connect jdbc:mysql://localhost/loudacre --username training --password training --table webpage --target-dir /loudacre/webpage --as-parquetfile
 
-// Create a DataFrame from the webpage table
+// Create a DataFrame from the webpage table must to be a parquet
 val webpageDF = sqlContext.read.load("/loudacre/webpage")
 
 // Show the schema for the webpage table dataframe
