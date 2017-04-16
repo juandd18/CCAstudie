@@ -1,4 +1,15 @@
 
+//hive
+CREATE DATABASE IF NOT EXISTS lahman;
+
+USE lahman;
+
+CREATE TABLE AllstarFull (playerID string,yearID string,gameNum string,gameID string,teamID string,lgID string,GP string,startingPos string) row format delimited fields terminated by ',' stored as textfile;
+
+LOAD DATA INPATH '/user/bigdataproject/AllstarFull.csv' OVERWRITE INTO TABLE AllstarFull;
+
+SELECT * FROM AllstarFull;
+
 
 //conectarse a mysql desde vm cdh. el password es cloudera
 mysql -u root -p 
