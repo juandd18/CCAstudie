@@ -1,0 +1,59 @@
+
+import com.databricks.spark.avro._
+
+val sqlContext = new SQLContext(sc)
+
+// The Avro records are converted to Spark types, filtered, and
+// then written back out as Avro records
+val df = sqlContext.read.avro("input dir")
+df.filter("age > 5").write.avro("output dir")
+
+
+import com.databricks.spark.avro._
+
+val df = sqlContext.createDataFrame( 
+  Seq(
+    (2012, 8, "Batman", 9.8),
+    (2012, 8, "Hero", 8.7),
+    (2012, 7, "Robot", 5.5),
+    (2011, 7, "Git", 2.0))
+  ).toDF("year", "month", "title", "rating") //SOLO USANDO SEQ
+df.toDF.write.mode("overwrite").avro("/user/cca/outputavro")
+df.write.mode("overwrite").format("com.databricks.spark.avro").save("/user/cca/outputavro")
+
+//compress parquet files
+sqlContext.setConf("spark.sql.parquet.compression.codec","gzip")
+df.write.mode("overwrite").option("compression", "gzip").parquet("/user/cca/outputparquet")
+
+sqlContext.setConf("spark.sql.parquet.compression.codec","snappy")
+df.write.mode("overwrite").option("compression", "snappy").parquet("/user/cca/outputparquet")
+
+
+import com.databricks.spark.avro._
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types._
+
+val regions = sc.textFile("/user/cca/status-regions.txt").map(x => x.split(',')).map(x => Row(x(0),x(1).toFloat,x(2).toFloat))
+
+val schema = StructType(Array(StructField("id",StringType,false),StructField("value1",FloatType,false),StructField("value2",FloatType,false) ))
+
+val regions_df = sqlContext.createDataFrame(regions,schema)
+
+regions_df.write.mode("overwrite").json("/user/cca/jsonregions")
+
+val regionsjson = sqlContext.read.json("/user/cca/jsonregions")
+regionsjson.filter("value1 > 10").show(2) //SE HACE PARA QUE EJECUTE ERROR 
+//EN EL COMANDO DE ABAJO
+regionsjson.filter("value1 > 10").toDF.write.mode("overwrite").avro("/user/cca/avroregions")
+
+# option 2, multiple files on S3 or too large to bring all down to driver
+import json
+
+df = sc.wholeTextFiles('/tmp/*.json').flatMap(lambda x: json.loads(x[1])).toDF()
+display(df)
+
+
+
+
+
+
