@@ -42,5 +42,7 @@ sqlContext.sql("use juandavid")
 //make select 
 sqlContext.sql("select * from orders").show()
 
+val table = sqlContext.sql("select * from orders")
+table.saveAsTable("ordersSpark")
 
 
