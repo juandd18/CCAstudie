@@ -28,4 +28,19 @@ stored as textfile location '/user/cca/orders/';
 //describe the properties of the table
 describe formatted orders;
 
- 
+//output the result in a file results and the log in the query.log (>> => overwrite)
+beeline -u jdbc:hive2:// -e 'use juandavid; select * from orders limit 3;' 2>>query.log 1> results
+
+//in case that spark sqlContext does not find hive metastore
+cp  /usr/lib/hive/conf/hive-site.xml    /usr/lib/spark/conf/
+
+//use hive with spark sql
+spark-shell --master yarn 
+
+//make reference to the database
+sqlContext.sql("use juandavid")
+//make select 
+sqlContext.sql("select * from orders").show()
+
+
+
