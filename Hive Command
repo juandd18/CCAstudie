@@ -12,11 +12,17 @@ create database if not exists juandavid;
 use juandavid;
 
 //hadoop commands in beeline and hive cli
-dfs -ls /user/
+dfs -ls /user/;
 
 //create table
-create external table orders (orderId int,dateOrder date,value int, state string) 
+create  table orders (orderId int,dateOrder date,value int, state string) 
 row format delimited fields terminated by ',' stored as textfile;
+
+//insert into table append mode (IN BEELINE THE LOCAL NOT WORK)
+load data inpath '/user/cca/orders/' into table orders; 
+
+//IN HIVE ONLY IMPORTANTE
+load data local inpath '/user/cca/orders/' into table orders;
 
 //borrar tabla
 drop table orders;
@@ -25,11 +31,34 @@ create external table orders (orderId int,dateOrder date,value int, state string
 row format delimited fields terminated by ',' 
 stored as textfile location '/user/cca/orders/';
 
+//show the sintax of creation
+show create table orders;
+
 //describe the properties of the table
 describe formatted orders;
 
 //output the result in a file results and the log in the query.log (>> => overwrite)
 beeline -u jdbc:hive2:// -e 'use juandavid; select * from orders limit 3;' 2>>query.log 1> results
+
+//create partitioned table. FIRST IS partitioned by then row format
+CREATE TABLE `device_statusPartitioned`(date string,mac string,value1 float,value2 float)
+partitioned by (device string) row format delimited fields terminated by ',' stored as textfile;
+
+//create partition in a table witouth data
+alter table device_statusPartitioned add partition (device="computador");
+
+//insert data into a partition
+insert into device_statuspartitioned partition (device='Ronin')
+select date,mac,value1,value2 from device_status where device = 'Ronin';
+
+//delete data of a table 
+truncate table device_statuspartitioned;
+
+//insert into partition table dinamically
+set hive.exec.dynamic.partition.mode=nonstrict;
+insert into device_statuspartitioned partition (device)
+select * from device_status;
+
 
 //in case that spark sqlContext does not find hive metastore
 cp  /usr/lib/hive/conf/hive-site.xml    /usr/lib/spark/conf/
