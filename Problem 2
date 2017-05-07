@@ -1,0 +1,37 @@
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" 
+--username root --password cloudera --table products 
+--target-dir /user/cloudera/products --fields-terminated-by '|' 
+--as-textfile;
+
+//hdfs
+hdfs dfs -mv /user/cloudera/products /user/cloudera/problem2/products
+
+/Read is 4, Write is 2 and execute is 1. 
+//ReadWrite,Execute = 4 + 2 + 1 = 7
+//Read,Write = 4+2 = 6
+//Read ,Execute=4+1=5
+
+hdfs dfs -chmod 765 /user/cloudera/problem2/products/*
+
+import org.apache.spark.sql.types._
+
+val products = sc.textFile("/user/cloudera/problem2/products").map(x=> {
+var d = x.split('|'); 
+(d(0).toInt,d(1).toInt,d(2).toString,d(3).toString,d(4).toFloat,d(5).toString)
+});
+
+case class Product(productID:Integer, productCatID: Integer, productName: String, productDesc:String, productPrice:Float, productImage:String);
+
+val productsDF = products.map(x=> Product(x._1,x._2,x._3,x._4,x._5,x._6)).toDF();
+
+val priceProduct = productsDF.filter($"productPrice" < 100 )
+
+val prodCategory = priceProduct.groupBy($"productCatID").agg(max($"productPrice").alias("max_product"),countDistinct($"productId").alias("count"),avg($"productPrice").alias("avgprice"),min($"productPrice").alias("minPrice"))
+
+import com.databricks.spark.avro._
+sqlContext.setConf("spark.sql.avro.compression.codec","snappy")
+prodCategory.write.avro("/user/cloudera/problem2/products/result-df")
+
+
+
