@@ -14,6 +14,20 @@ SELECT * FROM AllstarFull;
 //conectarse a mysql desde vm cdh. el password es cloudera
 mysql -u root -p 
 
+Problem 1.
+Using sqoop, import orders table into hdfs to folders /user/cloudera/problem1/orders. 
+File should be loaded as Avro File and use snappy compression
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db"
+ --username root --password cloudera --table orders --compress 
+ --compression-codec org.apache.hadoop.io.compress.SnappyCodec 
+ --target-dir /user/cloudera/problem1/orders --as-avrodatafile;
+ 
+ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
+ --table order_items --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec 
+ --target-dir /user/cloudera/problem2/orders_items --as-avrodatafile;
+
+
 //muestra la lista de tablas de una base de datos
 sqoop list-tables \
  --connect jdbc:mysql://localhost/retail_db \
