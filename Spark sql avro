@@ -52,6 +52,20 @@ import json
 df = sc.wholeTextFiles('/tmp/*.json').flatMap(lambda x: json.loads(x[1])).toDF()
 display(df)
 
+//CREATE A HIVE TABLE WITH A AVRO FILE
+hdfs dfs -get /user/hive/warehouse/retail_stage.db/orders/part-m-00000.avro
+avro-tools getschema part-m-00000.avro > orders.avsc
+hdfs dfs -mkdir /user/hive/schemas
+hdfs dfs -ls /user/hive/schemas/order
+hdfs dfs -copyFromLocal orders.avsc /user/hive/schemas/order
+hdfs dfs -put orders.avsc /user/hive/schemas/order/
+
+//hive
+create external table orders_sqoop
+STORED AS AVRO
+LOCATION '/user/hive/warehouse/retail_stage.db/orders'
+TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order/orders.avsc');
+
 
 
 
