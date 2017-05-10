@@ -1,0 +1,25 @@
+
+sqoop import-all-tables \
+--connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+--username retail_dba \
+--password cloudera \
+--warehouse-dir /user/hive/warehouse/retail_stage.db \
+--compress \
+--compression-codec snappy \
+--as-avrodatafile -m1;
+
+hdfs dfs -get /user/hive/warehouse/retail_stage.db/orders/part-m-00000.avro
+avro-tools getschema part-m-00000.avro > orders.avsc
+hdfs dfs -mkdir /user/hive/schemas
+hdfs dfs -ls /user/hive/schemas/order
+hdfs dfs -copyFromLocal orders.avsc /user/hive/schemas/order
+hdfs dfs -put orders.avsc /user/hive/schemas/order/
+
+//hive
+create external table orders_sqoop
+STORED AS AVRO
+LOCATION '/user/hive/warehouse/retail_stage.db/orders'
+TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order/orders.avsc');
+
+select * from orders_sqoop as X where X.order_date in (select inner.order_date from (select Y.order_date, count(1) as total_orders from orders_sqoop as Y group by Y.order_date order by total_orders desc, Y.order_date desc limit 1) inner);
+
