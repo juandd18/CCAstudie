@@ -1,0 +1,134 @@
+
+1. Login to MySQL using below commands on a fresh terminal window
+    mysql -u retail_dba -p
+    Password = cloudera
+2. Create a replica product table and name it products_replica
+    create table products_replica as select * from products
+3. Add primary key to the newly created table
+    alter table products_replica add primary key (product_id);
+4. Add two more columns
+    alter table products_replica add column (product_grade int, product_sentiment varchar(100))
+5. Run below two update statements to modify the data
+    update products_replica set product_grade = 1  where product_price > 500;
+    update products_replica set product_sentiment  = 'WEAK'  where product_price between 300 and  500;
+    
+
+sqoop import \
+--connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+--username retail_dba \
+--password cloudera \
+--table products_replica \
+--target-dir /user/cloudera/problem5/products-text \
+--fields-terminated-by '|' \
+--lines-terminated-by '\n' \
+--null-non-string -1 \
+--null-string "NOT-AVAILABLE" \
+-m 3 \
+--where "product_id between 1 and 1000" \
+--outdir /home/cloudera/sqoop1 \
+--boundary-query "select min(product_id), max(product_id) from products_replica where product_id between 1 and 1000";
+
+
+sqoop import \
+--connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+--username retail_dba \
+--password cloudera \
+--table products_replica \
+--target-dir  /user/cloudera/problem5/products-text-part1  \
+--fields-terminated-by '*' \
+--lines-terminated-by '\n' \
+--null-non-string -1000 \
+--null-string "NA" \
+-m 2 \
+--where "product_id <= 1111 " \
+--outdir /home/cloudera/sqoop2 \
+--boundary-query "select min(product_id), max(product_id) from products_replica where product_id <= 1111";
+
+sqoop import \
+--connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+--username retail_dba \
+--password cloudera \
+--table products_replica \
+--target-dir  /user/cloudera/problem5/products-text-part2  \
+--fields-terminated-by '*' \
+--lines-terminated-by '\n' \
+--null-non-string -1000 \
+--null-string "NA" \
+-m 5 \
+--where "product_id > 1111 " \
+--outdir /home/cloudera/sqoop3 \
+--boundary-query "select min(product_id), max(product_id) from products_replica where product_id <= 1111";
+
+
+//step 4. the jar file is on output console of tha last run sqoop import
+
+sqoop merge \
+--class-name products_replica \
+--jar-file mp/sqoop-cloudera/compile/66b4f23796be7625138f2171a7331cd3/products_replica.jar \
+--new-data /user/cloudera/problem5/products-text-part2 \
+--onto /user/cloudera/problem5/products-text-part1 \
+--target-dir /user/cloudera/problem5/products-text-both-parts \
+--merge-key product_id;
+
+
+//step 5
+On terminal -
+
+sqoop job --create first_sqoop_job -- import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username "retail_dba" --password "cloudera" --table products_replica --target-dir /user/cloudera/problem5/products-incremental --check-column product_id --incremental append --last-value 0;
+
+sqoop job --exec first_sqoop_job
+
+On MySQL command line -
+
+mysql> insert into products_replica values (1346,2,'something 1','something 2',300.00,'not avaialble',3,'STRONG');
+mysql> insert into products_replica values (1347,5,'something 787','something 2',356.00,'not avaialble',3,'STRONG');
+
+On terminal - 
+
+sqoop job --exec first_sqoop_job
+
+On MYSQL Command Line
+
+insert into products_replica values (1376,4,'something 1376','something 2',1.00,'not avaialble',3,'WEAK');
+insert into products_replica values (1365,4,'something 1376','something 2',10.00,'not avaialble',null,'NOT APPLICABLE');
+
+On terminal - 
+
+sqoop job --exec first_sqoop_job
+
+
+//step 6
+
+sqoop job --create hive_sqoop_job -- import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username "retail_dba" --password "cloudera" --table products_replica  --check-column product_id --incremental append --last-value 0 --hive-import --hive-table products_hive --hive-database problem5;
+
+On Hive window:
+
+create database problem5;
+
+use problem5;
+
+create table products_hive  (product_id int, product_category_id int, product_name string, product_description string, product_price float, product_imaage string,product_grade int,  product_sentiment string);
+
+On Terminal window
+
+sqoop job --exec hive_sqoop_job
+
+On MySQL window
+
+insert into products_replica values (1378,4,'something 1376','something 2',10.00,'not avaialble',null,'NOT APPLICABLE');
+insert into products_replica values (1379,4,'something 1376','something 2',10.00,'not avaialble',null,'NOT APPLICABLE');
+
+On Terminal Window
+
+sqoop job --exec hive_sqoop_job
+
+//point 7 SQOOP EXPORT HIVE
+sqoop export --username "retail_dba" --password "cloudera" --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" 
+--export-dir /user/hive/warehouse/problem5.db/products_hive/ --fields-terminated-by '\001' --input-null-non-string "null" 
+--input-null-string "null" --update-mode allowinsert --update-key product_id 
+--columns "product_id,product_category_id,product_name,product_description,product_price,product_impage,product_grade,product_sentiment" 
+--table products_external;
+
+
+
+
