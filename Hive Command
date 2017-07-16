@@ -111,5 +111,16 @@ CREATE TEMPORARY FUNCTION nombredelafuncion AS 'nombrepaquete.nombredeclase'
 //other way
 CREATE FUNCTION urldetector as 'com.dataflowdeveloper.detection.URLDetector' USING JAR 'hdfs:///udf/urldetector-1.0-jar-with-dependencies.jar', JAR 'hdfs:///udf/url-detector-0.1.15.jar';
 
+//CHANGE THE TYPE OF A FIELD
+ALTER TABLE table_name CHANGE old_col_name new_col_name new_data_type
+ALTER TABLE customer_test CHANGE customer_email customer_email varchar(70)
+
+//PURGE BAD RECORDS FROM A DATA SET
+SELECT country, CASE WHEN LENGTH(os(agent)) > 0 THEN os(agent) ELSE 'Others' END AS SO, COUNT(*) 
+FROM clicks_data 
+WHERE country IS NOT NULL AND os(agent) IS NOT NULL 
+GROUP BY country, os(agent);
+
+
 
 
