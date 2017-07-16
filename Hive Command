@@ -90,9 +90,19 @@ row format delimited fields terminated by ','
 stored as textfile
 location '/user/cloudera/customers/'
 
-
-set parquet.compression=SNAPPY;
-
-CREATE TABLE customerSnappy
+CREATE TABLE customerParquet
 STORED AS PARQUET
 AS SELECT * FROM customer_test;
+
+//CHANGE COMPRESSION FORMAT
+//first set this variables
+set hive.exec.compress.output=true;
+set mapreduce.output.fileoutputformat.compress=true;
+
+//select the compression codec that you want
+set mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec;
+set io.compression.codecs;
+
+
+
+
