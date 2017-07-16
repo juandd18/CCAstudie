@@ -103,6 +103,13 @@ set mapreduce.output.fileoutputformat.compress=true;
 set mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec;
 set io.compression.codecs;
 
+//USE A EXTERNAL UDF (LIBRARY)
+ADD jar /ubicacione/nombre.jar
+
+CREATE TEMPORARY FUNCTION nombredelafuncion AS 'nombrepaquete.nombredeclase'
+
+//other way
+CREATE FUNCTION urldetector as 'com.dataflowdeveloper.detection.URLDetector' USING JAR 'hdfs:///udf/urldetector-1.0-jar-with-dependencies.jar', JAR 'hdfs:///udf/url-detector-0.1.15.jar';
 
 
 
