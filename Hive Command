@@ -121,6 +121,47 @@ FROM clicks_data
 WHERE country IS NOT NULL AND os(agent) IS NOT NULL 
 GROUP BY country, os(agent);
 
+//SERDES
 
+add jar /home/cloudera/hive-json-serde-0.2.jar
 
+CREATE EXTERNAL TABLE retail.jsonSerde (
+id bigint,
+created_at string,
+text string,
+user_id bigint,
+user_name string
+)
+ROW FORMAT SERDE "org.apache.hadoop.hive.contrib.serde2.JsonSerde"
+WITH SERDEPROPERTIES(
+"id"="$.id",
+"created_at"="$.created_at",
+"text"="$.text",
+"user_id"="$.user_id",
+"user_name"="$.user_name"
+)
+LOCATION '/user/ccp/hive/jsontable'
 
+ADD JAR /home/cloudera/hivexmlserde-1.0.5.3.jar
+
+CREATE EXTERNAL TABLE retail.xmlTable(
+customer_id string,
+income bigint,
+demographics map<string,string>,
+financial map<string,string>
+)
+ROW FORMAT SERDE "com.ibm.spss.hive.serde2.xml.XmlSerDe"
+WITH SERDEPROPERTIES(
+"column.xpath.customer_id"="/record/@customer_id",
+"column.xpath.income"="/record/income/text()",
+"column.xpath.demographics"="/record/demographics/*",
+"column.xpath.financial"="/record/financial/*"
+)
+STORED AS
+INPUTFORMAT 'com.ibm.spss.hive.serde2.xml.XmlInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.IgnoreKeyTextOutputFormat'
+LOCATION '/user/ccp/hive/xmldata'
+TBLPROPERTIES (
+"xmlinput.start"="<record customer",
+"xmlinput.end"="</record>"
+);
