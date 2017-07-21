@@ -71,6 +71,267 @@ log_meg = the rest of the log file
 2.count the number of occurances of processes that got logged by year,month, day and process
 
 
+//ejercisio 4
+
+FirstName,LastName,EMPID,LoggedInDate,JoiningDate,DeptId
+Ajit,Singh,101,20131206,20131207,hadoopexamITDEPT
+Arun,Kumar,102,20131206,20110607,hadoopexamPRODDEPT
+Ajit,Singh,101,20131209,20131207,hadoopexamITDEPT
+Ajit,Singh,101,201312011,20131207,hadoopexamITDEPT
+Ajit,Singh,101,201312012,20131207,hadoopexamITDEPT
+Ajit,Singh,101,201312013,20131207,hadoopexamITDEPT
+Ajit,Singh,101,20131216,20131207,hadoopexamITDEPT
+Ajit,Singh,101,20131217,20131207,hadoopexamITDEPT
+Arun,Kumar,102,20131206,20110607,hadoopexamPRODDEPT
+Arun,Kumar,102,20131209,20110607,hadoopexamPRODDEPT
+Arun,Kumar,102,20131210,20110607,hadoopexamPRODDEPT
+Arun,Kumar,102,20131211,20110607,hadoopexamPRODDEPT
+Arun,Kumar,102,20131212,20110607,hadoopexamPRODDEPT
+Arun,Kumar,102,20131213,20110607,hadoopexamMARKETDEPT
+Arun,Kumar,102,20131214,20110607,hadoopexamMARKETDEPT
+
+1.remove duplicate records of this file ignoring loggedindate
+2.store the result in hive table
+
+//ejercisio 5 
+
+blood pressure range 
+normal blood pressure low 80 and high 120
+optimal ldl: less than 100
+optimal total: less than 200
+optimal trigliceridos less than 150
+
+PatientInfo.csv
+Id,FirstName,LastName,Age,BirthDate
+1,Ajit,Jogi,45,19-Aug-1970
+2,Anubhav,shyam,56,30-Sep-1965
+3,Raghu,Prasad,43,30/Jul/1963
+4,Devi,Ganga,41,06/22/1968
+5,Praful,Devang,33,13/Aug/1984
+6,Mithun,Chauhan,54,19/Jun/1965
+7,Vikas,Jain,35,30-Jun-1980
+8,Vipul,Garg,40,29-Mar-1975
+9,Dipti,Deva,45,30-Aug-1981
+10,John,Martis,43,12-Jan-1983
+11,Martina,Martis,47,Jun-12 1969
+
+HealthDetail.csv
+Id,LowBP,HighBP,LDL,TotalCol,Triglycerides
+1,60,110,90,170,130
+2,60,110,110,210,170
+3,60,110,85,198,140
+4,60,110,98,202,130
+5,60,110,102,206,112
+6,60,110,105,201,190
+7,60,110,100,176,187
+8,60,110,97,140,120
+9,60,110,76,130,80
+10,60,110,65,190,60
+
+1.denormalize both dataset and all patientinfo needs to be
+selected wheter it has healhdetail or not
+2. denormalize transform date to yyyy-mm-dd
+3. save to hdfs 
+4. filter ldl less than 50 
+filter month jun
+
+//ejercisio 6 
+
+hadoopexam_jun15.log
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+hadoopexam_jun16.log
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+hadoopexam_july15.log
+July  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+July  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+July  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+July  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+July  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+July  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+July  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+hadoopexam_july16.log
+July  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+July  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+July  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+July  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+July  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+July  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+July  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.create hive table partition by year,month,day and load with dinamycally partition
+
+//ejercisio 7
+
+ID,URL,DATE,PUBID,ADVERTISERID
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+2,http://QuickTechie.com/path1/p.php?keyword=hive&country=us#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://QuickTechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+8,http://QuickTechie.com/path1/p.php?keyword=apache&country=us#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+9,http://training4exam.com/path1/p.php?keyword=hadoopexam&country=india#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+10,http://hadoopexam.com/path1/p.php?keyword=hadooptraining&country=us#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+11,http://QuickTechie.com/path1/p.php?keyword=de575&country=india#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+12,http://training4exam.com/path1/p.php?keyword=cca175&country=us#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+
+1.load data to hdfs
+2. manage table partition by advertise host and country
+table 
+id,date,public,advertiserid,keyword
+
+//ejercicio 8
+
+ADSSHOWN.log
+ID,URL,DATE,PUBID,ADVERTISERID
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+2,http://QuickTechie.com/path1/p.php?keyword=hive&country=us#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://QuickTechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+8,http://QuickTechie.com/path1/p.php?keyword=apache&country=us#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+9,http://training4exam.com/path1/p.php?keyword=hadoopexam&country=india#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+10,http://hadoopexam.com/path1/p.php?keyword=hadooptraining&country=us#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+11,http://QuickTechie.com/path1/p.php?keyword=de575&country=india#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+12,http://training4exam.com/path1/p.php?keyword=cca175&country=us#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+2,http://QuickTechie.com/path1/p.php?keyword=hive&country=us#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://QuickTechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+8,http://QuickTechie.com/path1/p.php?keyword=apache&country=us#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+9,http://training4exam.com/path1/p.php?keyword=hadoopexam&country=india#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+10,http://hadoopexam.com/path1/p.php?keyword=hadooptraining&country=us#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+11,http://QuickTechie.com/path1/p.php?keyword=de575&country=india#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+12,http://training4exam.com/path1/p.php?keyword=cca175&country=us#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+
+ADS.log
+ID,ADNAME,CPC
+1,HADOOPTRAIN,2
+2,HIVETRAIN,3
+3,PIGTRAIN,3
+4,SPARKTRAIN,4
+5,DSTRAIN,5
+6,JAVATRAIN,3
+7,SCALATRAIN,2
+8,SASTRAIN,1
+9,DBTRAIN,3
+10,CASSANDRATRAIN,3
+11,ADMINTRAIN,4
+12,PYTHONTRAIN,3
+
+1.denormalize the two tables
+2.calculate the total add expenses by domain and country
+
+//ejercicio 9 
+
+ADSSHOWN1.log
+ID,URL,DATE,PUBID,ADVERTISERID
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+2,http://QuickTechie.com/path1/p.php?keyword=hive&country=us#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://QuickTechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+
+ADSSHOWN2.log
+ID,URL,DATE,PUBID,ADVERTISERID
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://quicktechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+8,http://quicktechie/path1/p.php?keyword=apache&country=us#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+
+ADSSHOWN3.log
+ID,URL,DATE,PUBID,ADVERTISERID
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+8,http://QuickTechie.com/path1/p.php?keyword=apache&country=us#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+9,http://Training4exam.com/path1/p.php?keyword=hadoopexam&country=india#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+10,http://hadoopexam.com/path1/p.php?keyword=hadooptraining&country=us#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+11,http://QuickTechie.com/path1/p.php?keyword=de575&country=india#Ref1,01/JUL/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+12,http://training4exam.com/path1/p.php?keyword=cca175&country=us#Ref1,01/JUL/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+2,http://QuickTechie.com/path1/p.php?keyword=hive&country=us#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+3,http://training4exam.com/path1/p.php?keyword=spark&country=india#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+4,http://hadoopexam.com/path1/p.php?keyword=pig&country=us#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+5,http://QuickTechie.com/path1/p.php?keyword=datascience&country=india#Ref1,30/JUN/2016,PUBQUICKTECHIE,GOOGLEADSENSE
+6,http://Training4exam.com/path1/p.php?keyword=java&country=us#Ref1,30/JUN/2016,PUBTRAINING4EXAM,GOOGLEADSENSE
+
+1. eliminate duplicates considering lowercase and uppercase the same
+2.create hive table
+id int,
+date string
+pubid string
+advertiserid string
+keyword string
+host string 
+country string
+
+3. remove the invalidate host for example juandavid.com is ok not ok juandavid
+
+//ejercicio 10.
+
+HealthDetail.csv
+Id,Name,LowBP,HighBP,LDL,TotalCol,Triglycerides
+1,Amit,60,110,90,170,130
+2,Nitin,60,110,110,210,170
+3,Praveen,60,110,85,198,140
+4,Jeevan,60,110,98,202,130
+5,Sakar,60,110,102,206,112
+6,Heera,60,110,105,201,190
+7,Venkat,60,110,100,176,187
+8,Rahul,60,110,97,140,120
+9,Vishnu,60,110,76,130,80
+10,Lakshmi,60,110,65,190,60
+
+using jar
+/usr/lib/hive/lib/hive-exec.jar
+
+udfs classe
+org/apache/hadoop/hive/ql/udf/generic/GenericUDFLower.class
+org/apache/hadoop/hive/ql/udf/generic/GenericUDFOPNegative.class
+
+1. load data to hive
+2. create temporary function, use that funcion to lower the names
+3.save in a hive table
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
