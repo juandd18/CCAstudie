@@ -54,7 +54,8 @@ size string
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
 WITH SERDEPROPERTIES (
-'input.regex'='^(\\S+) (\\S+) (\\S+) \\[([^\\[]*)\\] "(.+)" (\\S+) (\\S+)'
+'input.regex'='^(\\S+) (\\S+) (\\S+) \\[([^\\[]*)\\] "(.+)" (\\S+) (\\S+)',
+'output.format.string'='%1$s %2$s %3$s %4$s %5$s %6$s %7$s'
 )
 
 LOAD DATA INPATH '/user/ccp/problem2data.txt' INTO TABLE patientinfo.logdata
@@ -88,28 +89,18 @@ node string,
 process string,
 log_meg string
 )
-PARTITIONED BY (year string, month string)
+PARTITIONED BY (year int, month int)
 ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
 WITH SERDEPROPERTIES(
 'input.regex'='^(\\S+)\s*(\\S+) (\\S+) (\\S+) (\\S+): (.+)'
 )
 LOCATION '/user/ccp/problem3';
 
-CREATE EXTERNAL TABLE patientinfo.tmplogproblem3
-(
-month string,
-day string,
-time string,
-node string,
-process string,
-log_meg string
-)
-ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
-WITH SERDEPROPERTIES(
-'input.regex'='^(\\S+)\\s*(\\S+) (\\S+) (\\S+) (\\S+): (.+)'
-)
-LOCATION '/user/ccp/tmpproblem3'
+ALTER TABLE patientinfo.logproblem3 ADD IF NOT EXISTS PARTITION(year=2017,month=6)
+LOCATION '/user/ccp/problem3_1.log'
 
-LOAD DATA LOCAL INPATH '/home/cloudera/problem3_2.log' INTO TABLE patientinfo.tmplogproblem3;
+ALTER TABLE patientinfo.logproblem3 ADD IF NOT EXISTS PARTITION(year=2017,month=6)
+LOCATION '/user/ccp/problem3_2.log'
 
-INSERT OVERWRITE TABLE patientinfo.logproblem3 PARTITION(year='2017',month) select day,time,node,process,log_meg,'2017' ,month from patientinfo.tmplogproblem3 where month='Jun'
+
+
