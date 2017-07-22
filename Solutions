@@ -161,6 +161,32 @@ TBLPROPERTIES(
 LOAD DATA INPATH '/user/ccp/problem6health.txt' INTO TABLE patientinfo.problem5healt;
 
 CREATE TABLE patientinfo.mergeproblem6 as
-SELECT p.id,p.name,p.lname,p.age,to_date(p.birthdate),h.lowbp,h.highbp,h.ldl,h.totalcol,h.triglycerides from problem6patient p left outer join problem5healt h on p.id = h.id
+SELECT p.id,p.name,p.lname,p.age,p.birthdate,h.lowbp,h.highbp,h.ldl,h.totalcol,h.triglycerides from problem6patient p left outer join problem5healt h on p.id = h.id
+
+different posibles formats and his regex in order to use it with case
+--'dd-MMM-yyyy' (\d{1,2})\-(\S{3})\-(\d{4})
+--'mm/dd/yyyy' (\S{2})\/(\d{1,2})\/(\d{4})
+--'dd/mmm/yyyy' (\d{1,2})\/(\S{3})\/(\d{4})
+-- 'mmm-dd yyyy' (\S{3})\-(\d{1,2})\s+(\d{4})
+
+SELECT SELECT p.id,p.name,p.lname,p.age, 
+CASE 
+WHEN p.birthdate REGEXP '(\\d{1,2})\\-(\\S{3})\\-(\\d{4})' THEN FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'dd-MMM-yyyy'),'MM/dd/yyyy')
+WHEN p.birthdate REGEXP '(\\S{2})\\/(\\d{1,2})\\/(\d{4})' THEN FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'mm/dd/yyyy'),'MM/dd/yyyy')
+WHEN p.birthdate REGEXP '(\\d{1,2})\\-(\\S{3})\\-(\\d{4})' THEN FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'dd/MMM/yyyy'),'MM/dd/yyyy')
+WHEN p.birthdate REGEXP '(\\S{3})\\-(\\d{1,2})\\s+(\\d{4})' THEN FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'MMM-dd yyyy'),'MM/dd/yyyy')
+ELSE
+p.birthdate
+END,
+h.lowbp,h.highbp,h.ldl,h.totalcol,h.triglycerides from problem6patient p left outer join problem5healt h on p.id = h.id
+
+----transform date or get dates
+FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'dd-MMM-yyyy'),'MM/dd/yyyy')
+
+
+
+
+
+
 
 
