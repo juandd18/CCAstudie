@@ -355,7 +355,31 @@ regexp_extract(url,'http:\/+(\\w*\\.\\w*)')  ,
 regexp_extract(url,'country=(\\S*)\\#') from tempproblem9
 WHERE regexp_extract(url,'http:\/+(\\w*\\.\\w*)') <> ''
 
+//ejercicio 10
 
+CREATE TABLE patientinfo.problem10
+(
+Id int,
+Name string,
+LowBP int,
+HighBP int,
+LDL int,
+TotalCol int,
+Triglycerides int
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+TBLPROPERTIES(
+'skip.header.line.count'='1'
+)
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem10.txt' INTO TABLE patientinfo.problem10
+
+ADD JAR /usr/lib/hive/lib/hive-exec.jar
+
+CREATE TEMPORARY FUNCTION exfunction AS 'org/apache/hadoop/hive/ql/udf/generic/GenericUDFLower.class';
+
+select *,exfunction(name) from patientinfo.problem10
 
 
 
