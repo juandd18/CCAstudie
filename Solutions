@@ -300,7 +300,60 @@ SELECT l.id,l.date,l.pubid,l.advertiserid,l.domain,l.country,a.adname,a.cpc FROM
 
 SELECT adname,sum(cpc) as sumExpenses from mergeproblem8 group by domain,country,adname order by sumExpenses desc
 
+//ejercicio 9
 
+7,http://hadoopexam.com/path1/p.php?keyword=jee&country=india#Ref1,01/JUL/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+
+keyword=(\S*)\&
+country=(\S*)\#
+http:\/+(\w*\.\w*)
+
+CREATE TABLE patientinfo.tempproblem9
+(
+ID int,
+URL string,
+DATE string,
+PUBID string,
+ADVERTISERID string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+TBLPROPERTIES(
+'skip.header.line.count'='1'
+)
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem9_1.txt' INTO TABLE patientinfo.tempproblem9
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem9_2.txt' INTO TABLE patientinfo.tempproblem9
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem9_3.txt' INTO TABLE patientinfo.tempproblem9
+
+id int,
+date string
+pubid string
+advertiserid string
+keyword string
+host string 
+country string
+
+CREATE TABLE patientinfo.problem9
+(
+id int,
+date string,
+pubid string,
+advertiserid string,
+keyword string,
+host string ,
+country string
+)
+
+
+INSERT INTO patientinfo.problem9 
+SELECT distinct id,date,lower(pubid) ,lower(ADVERTISERID),
+regexp_extract(url,'keyword=(\\S*)\\&') ,
+regexp_extract(url,'http:\/+(\\w*\\.\\w*)')  ,
+regexp_extract(url,'country=(\\S*)\\#') from tempproblem9
+WHERE regexp_extract(url,'http:\/+(\\w*\\.\\w*)') <> ''
 
 
 
