@@ -254,6 +254,52 @@ INSERT INTO TABLE patientinfo.problem7 PARTITION (host,country)
 SELECT id,date,pubid,advertiserid, regexp_extract(url,'keyword=(\\S*)&') as keyword, regexp_extract(url,'http:\\/+(\\w*\\.\\w*)') as host,
 regexp_extract(url,'country=(\\S*)\\#') as country FROM tempproblem7
 
+//ejercicio 8
+
+ID,URL,DATE,PUBID,ADVERTISERID
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
+
+http:\/+(\w*\.\w*)
+country=(\w*)\#
+
+CREATE TABLE patientinfo.tmpproblem8log
+(
+id int,
+url string,
+date string,
+pubid string,
+advertiserid string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+TBLPROPERTIES(
+'skip.header.line.count'='1'
+)
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem8log.txt' INTO TABLE patientinfo.tmpproblem8log
+
+CREATE TABLE patientinfo.problem8log AS
+select distinct id,date,pubid,advertiserid, regexp_extract(url,'http:\\/+(\\w*\\.\\w*)') as domain, regexp_extract(url,'country=(\\w*)\\#') as country from tmpproblem8log
+
+CREATE TABLE patientinfo.problem8ads
+(
+id int,
+adname string, 
+cpc int
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+TBLPROPERTIES(
+'skip.header.line.count'='1'
+)
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem8ads.txt' INTO TABLE patientinfo.problem8ads
+
+CREATE TABLE patientinfo.mergeproblem8 AS
+SELECT l.id,l.date,l.pubid,l.advertiserid,l.domain,l.country,a.adname,a.cpc FROM problem8log l inner join problem8ads a on a.id = l.id 
+
+SELECT adname,sum(cpc) as sumExpenses from mergeproblem8 group by domain,country,adname order by sumExpenses desc
+
 
 
 
