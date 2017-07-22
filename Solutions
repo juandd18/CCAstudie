@@ -220,7 +220,39 @@ PARTITIONED BY (year int,mes string,dia string)
 INSERT OVERWRITE TABLE patientinfo.problem6log PARTITION (year=2016,mes,dia)
 select time,host,proc,message,month as mes,day as dia from patientinfo.tempproblem6log
 
+//ejercicio 7
+1,http://hadoopexam.com/path1/p.php?keyword=hadoop&country=india#Ref1,30/JUN/2016,PUBHADOOPEXAM,GOOGLEADSENSE
 
+keyword=(\S*)&
+http:\/+(\w*\.\w*)
+country=(\S*)\#
+
+CREATE TABLE patientinfo.tempproblem7
+(
+ID string,
+URL string,
+DATE string,
+PUBID string,
+ADVERTISERID string
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+
+LOAD DATA INPATH '/user/ccp/problem7/problem7log.txt' INTO TABLE patientinfo.tempproblem7 
+
+CREATE TABLE patientinfo.problem7
+(
+id string,
+date string,
+public string,
+advertiserid string,
+keyword string
+)
+PARTITIONED BY (host string, country string)
+
+INSERT INTO TABLE patientinfo.problem7 PARTITION (host,country)
+SELECT id,date,pubid,advertiserid, regexp_extract(url,'keyword=(\\S*)&') as keyword, regexp_extract(url,'http:\\/+(\\w*\\.\\w*)') as host,
+regexp_extract(url,'country=(\\S*)\\#') as country FROM tempproblem7
 
 
 
