@@ -183,6 +183,44 @@ h.lowbp,h.highbp,h.ldl,h.totalcol,h.triglycerides from problem6patient p left ou
 ----transform date or get dates
 FROM_UNIXTIME(UNIX_TIMESTAMP(p.birthdate,'dd-MMM-yyyy'),'MM/dd/yyyy')
 
+//ejercicio 6
+
+July  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+
+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+):\\s+(.*)
+
+CREATE TABLE patientinfo.tempproblem6log
+(
+month string,
+day string,
+time string,
+host string,
+proc string,
+message string
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.RegexSerDe'
+WITH SERDEPROPERTIES(
+'input.regex'='(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+):\\s+(.*)'
+)
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem6_log1.txt' INTO TABLE patientinfo.tempproblem6log
+
+LOAD DATA LOCAL INPATH '/home/cloudera/ccp/problem6_log2.txt' OVERWRITE INTO TABLE patientinfo.tempproblem6log
+
+
+CREATE TABLE patientinfo.problem6log
+(
+time string,
+host string,
+proc string,
+message string
+)
+PARTITIONED BY (year int,mes string,dia string)
+
+INSERT OVERWRITE TABLE patientinfo.problem6log PARTITION (year=2016,mes,dia)
+select time,host,proc,message,month as mes,day as dia from patientinfo.tempproblem6log
+
+
 
 
 
