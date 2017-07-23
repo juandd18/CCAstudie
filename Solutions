@@ -478,9 +478,7 @@ sqoop eval --query "show tables;" --connect "jdbc:mysql://quickstart.cloudera:33
 //ejercicio 23
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
 --query "select * from order_items oi inner join orders o on oi.order_item_order_id = o.order_id where \$CONDITIONS" 
---target-dir /user/ccp/problem23 --as-avrodatafile -m 1 
-
---- falta el boundary query
+--target-dir /user/ccp/problem23 --as-avrodatafile -m 1 --split-by order_id
 
 // ejercicio 24
 --every time change the value '--last-value'
@@ -501,12 +499,12 @@ category_name string
 stored as avro
 
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
---table categories --target-dir /user/hive/warehouse/problem24.db --hive-import 
+--table categories --target-dir /user/hive/warehouse/problem24.db  --hive-home '/user/hive/warehouse' --hive-import 
 --hive-database problem25 --hive-overwrite --hive-table categories 
 
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root 
 --password cloudera --table categories --target-dir /user/hive/warehouse/problem25.db/ 
---create-hive-table --hive-import --hive-database problem25 
+--create-hive-table --hive-home '/user/hive/warehouse' --hive-import --hive-database problem25 
 
 
 
