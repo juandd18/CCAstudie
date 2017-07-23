@@ -430,7 +430,87 @@ sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --usern
  
 sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --hcatalog-database patientinfo --hcatalog-table salary --table salary --columns "id,salary"
 
-//ejercicio
+//ejercicio 13
+
+hdfs dfs -getmerge -help
+
+hdfs dfs -mkidr /user/ccp/foldercreation
+hdfs dfs -touchz /user/ccp/foldercreation/file
+
+hdfs dfs -put problem131.txt /user/ccp/foldercreation
+hdfs dfs -put problem132.txt /user/ccp/foldercreation
+
+hdfs dfs -getmerge  /user/ccp/foldercreation/ /home/cloudera/transfiles/recordsskip.txt
+
+hdfs dfs -put /home/cloudera/transfiles/* /user/ccp/folder
+
+//ejercicio 16
+
+CREATE DATABASE datapropertiestwo 
+LOCATION '/user/ccp/dataproperties'
+WITH DBPROPERTIES(
+'data.file.location'='/user/ccp/dataproperties',
+'database.creator'='juan',
+'database.created.on'='jul2017'
+)
+
+describe database extended datapropertiestwo;
+
+//ejercicio 18
+
+CREATE TABLE patientinfo.problem18
+(
+name string,
+bussinessplace array<string>,
+sexage struct<sex:string,age:int>,
+fathernamechild map<string,string>
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY ':'
+MAP KEYS TERMINATED BY ':' ;
+
+//ejercicio 20
+
+sqoop eval --query "show tables;" --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera
+--falta mirar si tengo permisos para leer base de datos
+
+//ejercicio 23
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
+--query "select * from order_items oi inner join orders o on oi.order_item_order_id = o.order_id where \$CONDITIONS" 
+--target-dir /user/ccp/problem23 --as-avrodatafile -m 1 
+
+--- falta el boundary query
+
+// ejercicio 24
+--every time change the value '--last-value'
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
+--table departments --target-dir /user/ccp/departments --fields-terminated-by '|' 
+--check-column department_id --incremental append --last-value 7
+
+//ejercicio 25 
+
+CREATE DATABASE problem25;
+
+CREATE TABLE problem25.categories
+(
+category_id int,
+category_deparment_id int,
+category_name string
+)
+stored as avro
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
+--table categories --target-dir /user/hive/warehouse/problem24.db --hive-import 
+--hive-database problem25 --hive-overwrite --hive-table categories 
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root 
+--password cloudera --table categories --target-dir /user/hive/warehouse/problem25.db/ 
+--create-hive-table --hive-import --hive-database problem25 
+
+
+
+
 
 
 
