@@ -320,6 +320,166 @@ org/apache/hadoop/hive/ql/udf/generic/GenericUDFOPNegative.class
 //ejercicio 11
 
 
+Employee.csv
+1001,Amit,male,35
+1002,Lokesh,male,36
+1003,Venkat,male,28
+1004,Radha,female,30
+1005,Vanita,female,42
+
+Salary.csv
+1001,120000
+1002,99000
+1003,106000
+1004,79000
+1005,89000
+
+1.create two tables in mysql and export those file(should be in hdfs)
+2.create an avro file of those files
+3.extract schema de avro sin descargarlo al local
+
+
+// ejercicio 13
+
+quicktechie.txt
+1,Alok,Hyderabad
+2,Krish,Hongkong
+3,Jyoti,Mumbai
+4,Atul,Banglore
+5,Ishan,Gurgaon
+
+hadoopexam.txt
+6,John,Newyork
+7,alp2004,California
+8,tellme,Mumbai
+9,Gagan21,Pune
+10,Mukesh,Chennai
+
+1.get the command which shows all the options in hdfs, and help option of a 
+command in hdfs
+2.create an empty file and a directory command
+3.load both files in a directory
+4.merge both files in hdfs
+5.hdfs put a complete folder
+
+//ejercicio 16
+
+1. creates a hive database with the following properties
+comment
+data file location
+data base creator 
+data base create on
+
+//ejercicio 18
+
+1.creates a table statement which contains
+name string
+bussinessplace array
+sexage struct
+fathernameChild map
+
+//ejercicio 20
+
+1. list all the tables of a database using sqoop
+2. use sqoop eval if you have permission to read a database
+
+//ejercicio 23
+
+1. import join result order and order_item
+and use order_id in boudary_query
+
+//ejercicio 24 
+1. import a table and do another import which do append not overwrite
+2. fields separated in '|'
+
+//ejercicio 25 
+1. create a dabase in hive
+2. create a hive table category and import data with sqoop
+3. export category to hive when the table not exists
+
+//ejercicio 27
+
+1. create table deparments in hive using sqoop
+2. add some rows to departments
+3. and add that rows to hive hdfs not overwrite
+
+//ejercicio 29 
+
+updated_departments.csv
+2,fitness
+3,footwear
+12,fathematics
+13,fcience
+14,engineering  
+1000,management
+
+
+2,Fitness
+3,Footwear
+12,Fathematics
+13,Science
+14,Engineering  
+1000,Management
+2000,Quality Check
+
+1. load with sqoop the first file and
+then the second file updating the first file
+
+
+//ejercicio 31
+
+1. create a hive table like departments
+2. using sqoop import data to this overwriting and using \001
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
