@@ -499,11 +499,11 @@ category_name string
 stored as avro
 
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
---table categories --target-dir /user/hive/warehouse/problem24.db  --hive-home '/user/hive/warehouse' --hive-import 
+--table categories --hive-home '/user/hive/warehouse' --hive-import 
 --hive-database problem25 --hive-overwrite --hive-table categories 
 
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root 
---password cloudera --table categories --target-dir /user/hive/warehouse/problem25.db/ 
+--password cloudera --table categories  
 --create-hive-table --hive-home '/user/hive/warehouse' --hive-import --hive-database problem25 
 
 
