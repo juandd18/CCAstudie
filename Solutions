@@ -388,5 +388,50 @@ CREATE TEMPORARY FUNCTION exfunction AS 'org.apache.hadoop.hive.ql.udf.generic.G
 
 select *,exfunction(name) from patientinfo.problem10
 
+//ejercicio 11
+
+create table employee(id int,name varchar(25),sex varchar(10),age int)
+
+create table salary(id int,salary bigint);
+
+create table patientinfo.tmpemployee
+(
+id int,
+name string,
+sex string,
+age int
+)
+row format delimited
+fields terminated by ','
+
+
+create table patientinfo.tmpsalary
+(
+id int,
+salary bigint
+)
+row format delimited 
+fields terminated by ','
+
+
+load data local inpath '/home/cloudera/ccp/problem11Empleyee.txt' into table patientinfo.tmpemployee
+
+load data local inpath '/home/cloudera/ccp/problem11Salary.txt' into table patientinfo.tmpsalary
+
+create table patientinfo.employee
+stored as avro as
+select * from tmpemployee
+
+create table patientinfo.salary
+stored as avro as
+select * from tmpsalary
+
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --hcatalog-database patientinfo --hcatalog-table employee --table employee --columns "id,name,sex,age"
+ 
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --hcatalog-database patientinfo --hcatalog-table salary --table salary --columns "id,salary"
+
+//ejercicio
+
+
 
 
