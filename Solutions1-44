@@ -506,6 +506,377 @@ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --usern
 --password cloudera --table categories  
 --create-hive-table --hive-home '/user/hive/warehouse' --hive-import --hive-database problem25 
 
+//ejercicio 27
+CREATE TABLE patientinfo.problem27
+(
+department_id int,
+department_name string
+)
+
+
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table departments --hive-import --hive-home /user/hive/warehouse --hive-table patientinfo.problem27
+
+sqoop export --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table departments --hive-import --hive-home /user/hive/warehouse --hive-table patientinfo.problem27 --check-column department_id --incremental append --last-value 8
+
+//ejercicio 29
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table update_departments --hive-import --hive-home /user/hive/warehouse --hive-table patientinfo.problem29 --create-hive-table
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table update_departments --hive-import --hive-home /user/hive/warehouse --hive-table patientinfo.problem29 --incremental lastmodified --check-column department_id --last-value 1000
+
+//ejercicio 37
+
+# the components on this agent
+a1.sources = source1
+a1.sinks = sink1
+a1.channels = channel1
+
+# Describe/configure the source
+a1.sources.source1.type = exec
+a1.sources.source1.command = tail -F /opt/gen_logs/logs/access.log
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/ccp/flume/problem37
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1
+a1.sinks.sink1.channel = channel1
+
+bin/flume-ng agent --conf . --conf-file flume37.conf --name a1 -Dflume.root.logger=INFO,console
+
+
+//ejercicio 38 
+
+CREATE EXTERNAL TABLE patientinfo.personsalary
+(
+name string,
+salary bigint,
+sex string,
+age int
+)
+row format delimited
+fields terminated by ','
+LOCATION '/user/hive/warehouse/patientinfo.db/personsalary'
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = source1
+a1.sinks = sink1
+a1.channels = channel1
+
+# Describe/configure the source
+a1.sources.source1.type = netcat
+a1.sources.source1.bind = localhost
+a1.sources.source1.port = 44444
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/hive/warehouse/patientinfo.db/personsalary
+a1.sinks.sink1.hdfs.fileType = DataStream
+a1.sinks.sink1.hdfs.writeFormat = Text
+a1.sinks.sink1.hdfs.filePrefix = test-events
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1
+a1.sinks.sink1.channel = channel1
+
+flume-ng agent --conf . --conf-file flumeproblem38.conf --name a1 -Dflume.root.logger=INFO,console --classpath "/usr/lib/hive-hcatalog/share/hcatalog/*":"/usr/lib/hive/lib/*"
+
+//ejercicio 39
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = source1
+a1.sinks = sink1
+a1.channels = channel1
+
+# Describe/configure the source
+a1.sources.source1.type = exec
+a1.sources.source1.command = tail -F /opt/gen_logs/logs/access.log
+a1.sources.source1.interceptors = i1
+a1.sources.source1.interceptors.i1.type = timestamp
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/ccp/flume/problem39/flume-%Y-%m-%d%H%M
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1
+a1.sinks.sink1.channel = channel1
+
+flume-ng agent --conf . --conf-file flumeproblem39.conf --name a1 -Dflume.root.logger=INFO,console 
+
+
+
+
+
+
+
+//ejercicio 40
+
+flume-ng agent --conf . --conf-file flumeproblem40.conf --name a1 -Dflume.root.logger=INFO,console 
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = source1
+a1.sinks = sink1
+a1.channels = channel1
+
+# Describe/configure the source
+a1.sources.source1.type = netcat
+a1.sources.source1.bind = localhost
+a1.sources.source1.port = 44444
+a1.sources.source1.interceptors = i1
+a1.sources.source1.interceptors.i1.type = regex_filter
+a1.sources.source1.interceptors.i1.regex = male
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/hive/warehouse/patientinfo.db/personsalary
+a1.sinks.sink1.hdfs.fileType = DataStream
+a1.sinks.sink1.hdfs.writeFormat = Text
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1
+a1.sinks.sink1.channel = channel1
+
+nc localhost 44444
+
+
+
+
+
+
+
+
+
+
+//ejercicio 41 
+
+
+CREATE EXTERNAL TABLE patientinfo.maleinfo
+(
+sex string,
+name string,
+city string
+)
+row format delimited
+fields terminated by ','
+location '/user/hive/warehouse/patientinfo.db/maleinfo'
+
+CREATE EXTERNAL TABLE patientinfo.femaleinfo
+(
+sex string,
+name string,
+city string
+)
+row format delimited
+fields terminated by ','
+location '/user/hive/warehouse/patientinfo.db/femaleinfo'
+
+flume-ng agent --conf . --conf-file flumeproblem41.conf --name a1 -Dflume.root.logger=INFO,console 
+
+
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = source1 
+a1.sinks = sink1 sink2
+a1.channels = channel1 channel2
+
+# Describe/configure the source 1
+a1.sources.source1.type = exec
+a1.sources.source1.command = tail -F /home/cloudera/ccp/flume/dataproblem41.txt
+a1.sources.source1.interceptors = i1
+a1.sources.source1.interceptors.i1.type = regex_extractor
+a1.sources.source1.interceptors.i1.regex = ^male|female
+a1.sources.source1.interceptors.i1.serializer = t1
+a1.sources.source1.interceptors.i1.serializer.t1.name = multi
+
+a1.sources.source1.selector.type = multiplexing
+a1.sources.source1.selector.header = multi
+a1.sources.source1.selector.mapping.male = channel1
+a1.sources.source1.selector.mapping.female = channel2
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/hive/warehouse/patientinfo.db/maleinfo
+a1.sinks.sink1.hdfs.fileType = DataStream
+a1.sinks.sink1.hdfs.batchSize = 1
+a1.sinks.sink1.hdfs.rollInterval = 0
+a1.sinks.sink1.hdfs.writeFormat = Text
+
+# Describe the sink 2
+a1.sinks.sink2.type = hdfs
+a1.sinks.sink2.hdfs.path = /user/hive/warehouse/patientinfo.db/femaleinfo
+a1.sinks.sink2.hdfs.fileType = DataStream
+a1.sinks.sink2.hdfs.batchSize = 1
+a1.sinks.sink2.hdfs.rollInterval = 0
+a1.sinks.sink2.hdfs.writeFormat = Text
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+a1.channels.channel2.type = memory
+a1.channels.channel2.capacity = 1000
+a1.channels.channel2.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1 channel2
+a1.sinks.sink1.channel = channel1
+a1.sinks.sink2.channel = channel2
+
+
+//ejercicio 42 
+
+flume-ng agent --conf . --conf-file flumeproblem42.conf --name a1 -Dflume.root.logger=INFO,console
+
+#NO REPETIR ARCHIVO EN EL FOLDER
+echo "soy juandavid" > /home/cloudera/ccp/flume/problem42/file.txt
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = source1
+a1.sinks = sink1
+a1.channels = channel1
+
+# Describe/configure the source
+a1.sources.source1.type = spooldir
+a1.sources.source1.spoolDir = /home/cloudera/ccp/flume/problem42
+
+# Describe the sink
+a1.sinks.sink1.type = hdfs
+a1.sinks.sink1.hdfs.path = /user/ccp/flume/problem42
+a1.sinks.sink1.hdfs.filePrefix = events
+a1.sinks.sink1.hdfs.fileSuffix = .log
+a1.sinks.sink1.hdfs.inUseFilePrefix = _
+a1.sinks.sink1.hdfs.fileType = DataStream
+a1.sinks.sink1.hdfs.writeFormat = Text
+
+# Use a channel which buffers events in memory
+a1.channels.channel1.type = memory
+a1.channels.channel1.capacity = 1000
+a1.channels.channel1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.source1.channels = channel1
+a1.sinks.sink1.channel = channel1
+
+//ejercicio 43
+
+flume-ng agent --conf . --conf-file flumeproblem43.conf --name a1 -Dflume.root.logger=INFO,console
+
+
+echo "soy juandavid" > /home/cloudera/ccp/flume/problem43/file.txt
+
+echo "soy juandavid" > /home/cloudera/ccp/flume/problem43_1/file.tx
+
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = r1 r2
+a1.sinks = k1
+a1.channels = c1
+
+# Describe/configure the source r1
+a1.sources.r1.type = spooldir
+a1.sources.r1.spoolDir = /home/cloudera/ccp/flume/problem43
+
+# Describe/configure the source r2
+a1.sources.r2.type = spooldir
+a1.sources.r2.spoolDir = /home/cloudera/ccp/flume/problem43_1
+
+# Describe the sink
+a1.sinks.k1.type = hdfs
+a1.sinks.k1.hdfs.path = /user/ccp/flume/problem43
+a1.sinks.k1.hdfs.filePrefix = events
+a1.sinks.k1.hdfs.fileSuffix = .log
+a1.sinks.k1.hdfs.inUsePrefix = _
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1
+a1.sources.r2.channels = c1
+a1.sinks.k1.channel = c1
+
+//Ejercicio 44
+
+# example.conf: A single-node Flume configuration
+
+# Name the components on this agent
+a1.sources = r1
+a1.sinks = k1 k2
+a1.channels = c1 c2 
+
+# Describe/configure the source
+a1.sources.r1.type = spooldir
+a1.sources.r1.spoolDir = /home/cloudera/ccp/flume/problem44
+a1.sources.r1.selector.type = replicating
+a1.sources.r1.selector.optional = c2
+
+# Describe the sink
+a1.sinks.k1.type = hdfs
+a1.sinks.k1.hdfs.dir = /user/ccp/flume/problem44
+a1.sinks.k1.hdfs.filePrefix = event
+a1.sinks.k1.hdfs.fileSuffix = .log
+a1.sinks.k1.hdfs.inUsePrefix = _
+
+# Describe the sink
+a1.sinks.k2.type = hdfs
+a1.sinks.k2.hdfs.dir = /user/ccp/flume/problem44_1
+a1.sinks.k2.hdfs.filePrefix = event
+a1.sinks.k2.hdfs.fileSuffix = .log
+a1.sinks.k2.hdfs.inUsePrefix = _
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 100
+
+# Use a channel which buffers events in memory
+a1.channels.c2.type = memory
+a1.channels.c2.capacity = 1000
+a1.channels.c2.transactionCapacity = 100
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1 c2
+a1.sinks.k1.channel = c1
+a1.sinks.k2.channel = c1
+
+
 
 
 
