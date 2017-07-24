@@ -432,48 +432,98 @@ then the second file updating the first file
 2. using sqoop import data to this overwriting and using \001
 
 
+//ejercicio 37
+
+start_logs
+tail_logs
+stop_logs
+
+those commands above generate files to /opt/gen_logs/logs/access.log
+
+write a flume configuration file flumeconfig37.conf, dump logs to hdfs, the channel every 100 messages should be commited and able to hold 1000 maximum events.
+
+//ejercicio 38
+
+name,salary,sex,age
+anok,2000,male,20
+francesca,2000,female,20
+anod,1000,female,21
+tona,2300,male,25
+ask,2040,male,28
+
+using netcat service on port 44444 and nc use line by line
+
+1.create a flume config to write data to hive warehouse
+2.write a hive query to read avg salary
+
+//ejercicio 39
+
+start_logs
+tail_logs
+stop_logs
+
+those commands above generate files to /opt/gen_logs/logs/access.log
+
+write a flume configuration file flumeconfig39.conf, dump logs to hdfs in a directory call flume3%Y%m%d%H%M (use interceptors to handle timestamp information if the message header does not have info), the channel every 100 messages should be commited and able to hold 1000 maximum events.
+
+//ejercicio 40 
+
+name,salary,sex,age
+anok,2000,male,20
+francesca,2000,female,20
+anod,1000,female,21
+tona,2300,male,25
+ask,2040,male,28
+
+using netcat service on port 44444 and nc use line by line
+
+1.create a flume config to write data to hive warehouse
+2.ONLY the male data should be imported
+
+//ejercicio 41
+
+sex,name,city
+male,juan,bogota
+female,lore,bogota
+male,daniel,bogota
+female,maria,bogota
+
+1. create a flume configuration which load the data to hive in a male table and female table, use tail source /home/cloudera/flumetest/in.txt file
+
+//ejercicio 42 
+
+the data is calling echo “some text” > /home/cloudera/ccp/flume/problem42
+
+create a flume agent with and save in hdfs 
+spool dir /home/cloudera/ccp/flume/problem42
+file prefix events
+file sufix .log
+files not commited with the prefix _
+data should be write as text
 
 
+//ejercicio 43
 
+the data is calling echo “some text” >  /spooldir/bb
 
+create a flume agent with and save in hdfs /flume/finance
+spool dir /spooldir/bb and spooldir/br
+file prefix events
+file sufix .log
+files not commited with the prefix _
+data should be write as text
 
+//ejercicio 44
 
+the data is calling echo “some text” >  /spooldir/bb
+create a flume agent from one source to two sinks but the second sink does not need to have rollback
+spool dir /spooldir/dir
+file prefix events
+file sufix .log
+files not commited with the prefix _
+data should be write as text
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//ejercicio 48 hacer
 
 
 
