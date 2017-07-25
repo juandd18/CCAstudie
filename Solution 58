@@ -138,7 +138,18 @@ workflow.xml
 
 //ejercicio 62
 
+logs = LOAD '/user/ccp/oozie/problem62/data.log';
+flattenlogs = FOREACH logs GENERATE flatten(regex_extract_all($0,'(\\w+)\\s+(\\d+)\\s+(\\d+:\\d+:\\d+)\\s+(\\w+\\W*\\w*)\\s+(.*?\\:)\\s+(.*$)')) AS
+(month_name,day,time,node,process,log_message);
+store flattenlogs  into '$output' using PigStorage();
 
+job.properties
+
+output=/user/ccp/oozie/problem62/output
+recordCount='cat /user/ccp/oozie/problem62/data.log | wc -1'
+requieredCount=1
+
+sqoopInputRecordCount='cat /user/ccp/oozie/problem62/output | wc -1'
 
 
 
