@@ -133,6 +133,13 @@ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --usern
 
 //ejercicio 55
 ----REVISAR COMO SE HACE EN PIG
+purchase = LOAD '/user/ccp/problem55/problem55data.txt' USING PigStorage('|') as (id:long,name,sname,product,purchaseamount:int);
+wallet = LOAD '/user/ccp/problem55/problem55wallet.txt' USING PigStorage('|') as (id:long, walletamount:int);
+joinValues = JOIN purchase by id, wallet by id;
+joinFiltered = FILTERED joinValues by (walletamount - purchaseamount < 150)
+STORE joinFiltered INTO '/user/ccp/problem55/problem55out/' USING PigStorage('|')
+
+---scala spark
 case class Purchase(id: Int, fname: String, lname: String, product: String, price: Double )
 
 val purchase = sc.textFile("/user/ccp/problem55/problem55data.txt").map{ x =>
@@ -173,32 +180,38 @@ tblproperties(
 
 load data inpath '/user/ccp/problem56.txt' into table tmppurchase
 
-create table retail_dos.purchase AS
-select distinct * from tmppurchase
+--Eliminates duplicates with rank
+create table purchase as
+select name,sname,item,price from
+(
+select name,sname,item,price, rank(partition by name,sname,item order by price desc) as ranked from tmppurchase
+) rank_table where rank_table.ranked = 1
 
 //ejercicio 57
 
 
-create table retail_dos.tmppurchase
-(
-name string,
-sname string,
-item string,
-price bigint
-)
-row format delimited
-fields terminated by '|'
-tblproperties(
-'skip.header.line.count'='1'
-)
+SELECT 
+s.RepName, s.Territory, s.Volume,
+rank() over(order by s.Volume desc) as rank
+from salesman s
+INNER JOIN 
+(select SalesRepId, sum(amount) as Volume from
+purchase group by SalesRepId) v
+WHERE s.RepId = v.SalesRepId
+order by v.Volume desc
 
-load data inpath '/user/ccp/problem56.txt' into table tmppurchase
+SELECT 
+s.RepName, s.Territory, s.Volume,
+rank() over(partition by s.Territory order by s.Volume desc) as rank
+from salesman s
+INNER JOIN 
+(select SalesRepId, sum(amount) as Volume from
+purchase group by SalesRepId) v
+WHERE s.RepId = v.SalesRepId
+order by v.Volume desc
 
-create table retail_dos.purchase AS
-select distinct * from tmppurchase
 
 
-select rank() over(order by price) as rankvalue, name,item from purchase;
 
 
 
