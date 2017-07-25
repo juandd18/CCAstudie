@@ -1,0 +1,143 @@
+
+//Ejercicio 48
+
+hdfs dfs -put deparments_schema.avsc /user/hive/schemas/departments
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table departments --target-dir /user/hive/warehouse/retail_dos.db/departments --as-avrodatafile -m 1
+
+CREATE TABLE retail_dos.departments
+STORED AS AVRO
+TBLPROPERTIES(
+'avro.schema.url'='/user/hive/schemas/departments/deparments_schema.avsc'
+)
+
+//Ejercicio 50
+
+
+CREATE TABLE retail_dos.orders_partition
+PARTITIONED BY (order_month string)
+STORED AS AVRO
+TBLPROPERTIES(
+'avro.schema.url'='/user/hive/schemas/orders/order_partitions.avsc')
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table orders --hive-import --hive-home /user/hive/warehouse --hive-table retail_dos.tmporders --create-hive-table
+
+insert into retail_dos.orders_partition partition(order_month)
+select order_id,unix_timestamp(order_date),order_customer_id,order_status,cast(month(order_date) as string) as order_month from tmporders; 
+
+drop table retail_dos.tmporders;
+
+//Ejercicio 52
+
+first_name,last_name,address,country,city,state,pincode,home,office,email,website
+juan,davi,djhd,col,chia,cun,1234,null,null,null,null
+juan,davi,djhd,per,chia,cun,1234,null,null,null,null
+juan,davi,djhd,ven,chia,cun,1234,null,null,null,null
+juan,davi,djhd,pan,chia,cun,1234,null,null,null,null
+juan,davi,djhd,col,chia,cun,1234,null,null,null,null
+juan,davi,djhd,col,chia,cun,1234,null,null,null,null
+juan,davi,djhd,col,chia,cun,1234,null,null,null,null
+
+CREATE TABLE retail_dos.tmppersonaInfo
+(
+fname string,
+lname string,
+address string,
+country string,
+city string,
+state string,
+pincode bigint,
+home string,
+office string,
+email string,
+website string
+)
+row format delimited
+fields terminated by ','
+tblproperties(
+'skip.header.line.count'='1'
+)
+
+load data local inpath '/home/cloudera/cpp/hive/problem52.txt' into table retail_dos.tmppersonaInfo
+
+CREATE TABLE retail_dos.personaInfo
+(
+fname string,
+lname string,
+address string,
+city string,
+pincode bigint,
+home string,
+office string,
+email string,
+website string
+)
+partitioned by (country string, state string)
+row format delimited
+fields terminated by ','
+
+
+alter table retail_dos.personaInfo add partition (state='JR',country='IN')
+
+INSERT INTO retail_dos.personaInfo partition (state,country)
+select fname,lname,address,city,pincode,home,office,email,website,state,country from 
+retail_dos.tmppersonaInfo ;
+
+drop table retail_dos.tmppersonaInfo;
+
+//ejercicio 53
+
+{
+  "type" : "record",
+  "name" : "orders_partition4",
+  "doc" : "Hive partitioned table schema ",
+  "fields" : [ {
+    "name" : "order_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_date",
+    "type" : [ "long", "null" ]
+  }, {
+    "name" : "order_customer_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_value",
+    "type" : "int",
+    "default" : -9999
+  }, {
+    "name" : "order_description",
+    "type" : "string",
+    "default" : "not-avaliable"
+  }, {
+    "name" : "order_status",
+    "type" : [ "string", "null" ]
+  } ],
+  "tableName" : "orders_partition4"
+}
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table orders --target-dir /user/hive/warehouse/retail_dos.db/orders_partition4 --as-avrodatafile -m 1 
+
+
+CREATE TABLE retail_dos.orders_partition4
+STORED AS AVRO
+TBLPROPERTIES(
+'avro.schema.url'='/user/hive/schemas/orders_partition/orders_partition4.avsc'
+)
+
+//ejercicio 54
+
+
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
+--query "select * from categories c inner join departments d on c.category_department_id = d.department_id where \$CONDITIONS" 
+--target-dir /user/ccp/problem54 --as-textfile -m 1 --split-by department-id
+
+
+
+
+
+
+
+
+
+
+
