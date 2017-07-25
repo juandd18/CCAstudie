@@ -1,4 +1,3 @@
-
 //Ejercicio 58
 
 1.create a new table in mysql department_new with 
@@ -16,6 +15,212 @@ deparment_name varchar(10)
 created_date timestamp default now()
 2.insert records on new table
 3.creates a oozie job wich import that table to hive
+
+//Ejercicio 60
+
+name,website,core,visits
+
+Amit,hadoopexam.com,hadoop,23
+Rakesh,quicktechie.com,hbase,12
+Vinod,training4exam.com,aws,11
+Sanjeev,acmeshell.com,sas,17
+Rahul,hadoopexam.com,spark,30
+
+1.creates a pig script wich filter visit less than 15 and sort it by visits
+2.creates a oozie job which run the pig script
+
+//Ejercicio 61
+
+1.using a workflow in oozie 
+2.create a folder, change permission over that folder
+3. delete that folder
+
+//Ejercicio 62
+
+month,day,time,machineid,proccesid,logmessage
+
+Jul  7 22:52:54 hadoopexam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 hadoopexam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 hadoopexam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 hadoopexam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 hadoopexam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 hadoopexam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 hadoopexam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+0.create a mysql table will be use later
+1.create a pig script which separate using regex the 6 fields and store it to hdfs
+2.create a oozie flow which
+2.1 first in a decision node veriry that the log file has more than one line
+2.2 if the desicion was sucessfull you call the pig script and then to another workflow
+2.3 this workflow should export data to a mysql table
+
+
+//Ejercicio 63
+
+Jul  7 22:52:54 hadoopexam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 hadoopexam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 hadoopexam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 hadoopexam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 hadoopexam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 hadoopexam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 hadoopexam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+Jul  7 22:52:54 quicktechie-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 quicktechie-n1 root: registered taskstats version 1
+Jul  7 22:53:31 quicktechie-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 quicktechie-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 quicktechie-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 quicktechie-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 quicktechie-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+Jul  7 22:52:54 training4exam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 training4exam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 training4exam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 training4exam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 training4exam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 training4exam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 training4exam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+
+0.create a mysql table will be use later
+1.create a pig script which separate using regex the 6 fields and store it to hdfs
+2.create a oozie flow which
+2.1 first in a decision node veriry that the log file has more than one line
+2.2 if the desicion was sucessfull you call the pig script and then to another workflow
+2.3 this workflow should export data to a mysql table
+2.4 and import again to hive tables
+
+
+//Ejercicio 64
+
+Jul  7 22:52:54 hadoopexam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 hadoopexam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 hadoopexam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 hadoopexam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 hadoopexam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 hadoopexam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 hadoopexam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+Jul  7 22:52:54 quicktechie-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 quicktechie-n1 root: registered taskstats version 1
+Jul  7 22:53:31 quicktechie-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 quicktechie-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 quicktechie-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 quicktechie-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 quicktechie-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+Jul  7 22:52:54 training4exam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 training4exam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 training4exam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 training4exam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 training4exam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 training4exam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 training4exam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.creates a oozie workflow
+2. which load the file to hdfs
+3. create a pig scripts which reads that log (regex) and creates a hive table
+
+//Ejercicio 65
+
+1.Create an oozie job which import all the tables in a database to hive
+with mapper 3
+
+//Ejercicio 66
+
+1. Create an oozie job which import all the tables in a database to hive using
+fork and join
+
+//Ejercicio 67
+
+1. Create an oozie job which import category table only for ids between 1 and 10
+
+//Ejercicio 68
+
+1. create an oozie job which creates a folder and two empty files
+2. and move that folder
+3. if pass that mv send a email
+
+//Ejercicio 70
+
+/user/cloudera/oozie/hadoopexam16/data/hadoopexam/201607/hadoopexam16.log
+Jul  7 22:52:54 hadoopexam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 hadoopexam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 hadoopexam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 hadoopexam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 hadoopexam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 hadoopexam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 hadoopexam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+/user/cloudera/oozie/hadoopexam16/data/quicktechie/201607/quicktechie16.log
+Jul  7 22:52:54 quicktechie-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 quicktechie-n1 root: registered taskstats version 1
+Jul  7 22:53:31 quicktechie-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 quicktechie-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 quicktechie-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 quicktechie-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 quicktechie-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+/user/cloudera/oozie/hadoopexam16/data/training4exam/201607/training4exam16.log
+Jul  7 22:52:54 training4exam-n1 pwd: tty (/dev/tty6) main process (1500) killed by TERM signal
+Jul  7 22:53:31 training4exam-n1 root: registered taskstats version 1
+Jul  7 22:53:31 training4exam-n1 root: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jul  7 22:53:31 training4exam-n1 root: piix4_smbus 0000:00:07.0: SMBus base address unpwdialized - upgrade BIOS or use force_addr=0xaddr
+Jul  7 22:53:31 training4exam-n1 root: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jul  7 22:53:57 training4exam-n1 root: hrtimer: interrupt took 11250457 ns
+Jul  7 22:53:59 training4exam-n1 ntpd_pwdres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1. creates a oozie job which 
+2.creates a hive table which read the above files in oozie
+2.creates a sql group by and save it in another table using oozie
+
+//Ejercicio 71
+
+---MIRAR SOLUCION
+
+//Ejercicio 72
+
+1.Creates a simple jobs in oozie (creates empty files) and scheduling every 3 minutes
+
+//Ejercicio 73
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
