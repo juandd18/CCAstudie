@@ -131,6 +131,75 @@ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --usern
 --query "select * from categories c inner join departments d on c.category_department_id = d.department_id where \$CONDITIONS" 
 --target-dir /user/ccp/problem54 --as-textfile -m 1 --split-by department-id
 
+//ejercicio 55
+----REVISAR COMO SE HACE EN PIG
+case class Purchase(id: Int, fname: String, lname: String, product: String, price: Double )
+
+val purchase = sc.textFile("/user/ccp/problem55/problem55data.txt").map{ x =>
+val line = x.split('|')
+Purchase(line(0).toInt,line(1),line(2),line(3),line(4).toDouble)
+}
+
+val purchaseDf = sqlContext.createDataFrame(purchase)
+
+case class Wallet(id: Int, amount: Float)
+
+val wallet = sc.textFile("/user/ccp/problem55/problem55wallet.txt").map{ x =>
+val line = x.split('|')
+Wallet(line(0).toInt,line(1).toFloat)
+}
+val walletDf = sqlContext.createDataFrame(wallet)
+
+val join = purchaseDf.alias("a").join(walletDf.alias("b"),$"a.id" === $"b.id").withColumn("balance", $"amount" - $"price" ).drop($"b.id")
+
+sqlContext.sql("use retail_dos")
+sqlContext.sql("")
+join.saveAsTable("retail_dos.purchaseDf")
+
+//ejercicio 56
+
+create table retail_dos.tmppurchase
+(
+name string,
+sname string,
+item string,
+price bigint
+)
+row format delimited
+fields terminated by '|'
+tblproperties(
+'skip.header.line.count'='1'
+)
+
+load data inpath '/user/ccp/problem56.txt' into table tmppurchase
+
+create table retail_dos.purchase AS
+select distinct * from tmppurchase
+
+//ejercicio 57
+
+
+create table retail_dos.tmppurchase
+(
+name string,
+sname string,
+item string,
+price bigint
+)
+row format delimited
+fields terminated by '|'
+tblproperties(
+'skip.header.line.count'='1'
+)
+
+load data inpath '/user/ccp/problem56.txt' into table tmppurchase
+
+create table retail_dos.purchase AS
+select distinct * from tmppurchase
+
+
+select rank() over(order by price) as rankvalue, name,item from purchase;
+
 
 
 
