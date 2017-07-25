@@ -1,0 +1,23 @@
+
+//Ejercicio 58
+
+1.create a new table in mysql department_new with 
+department_id int(11)
+deparment_name varchar(10)
+created_date timestamp default now()
+2.insert records on new table
+3.creates a oozie job wich import that table to hdfs
+
+//Ejercicio 59
+
+1.create a new table in mysql department_new with 
+department_id int(11)
+deparment_name varchar(10)
+created_date timestamp default now()
+2.insert records on new table
+3.creates a oozie job wich import that table to hive
+
+
+
+
+
