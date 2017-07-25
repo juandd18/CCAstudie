@@ -128,7 +128,7 @@ Avinash|Saha|Shampoo|777
 Anirudh|Makan|Brush|899
 Avinash|Temkar|Cloths|55
 
-1.remove duplicates from above fields
+1.remove duplicates from above fields base on name,sname and item
 
 //Ejercicio 57
 
