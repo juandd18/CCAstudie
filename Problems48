@@ -1,0 +1,162 @@
+
+//Ejercicio 48
+
+{
+  "type" : "record",
+  "name" : "sqoop_import_departments",
+  "doc" : "Sqoop import of departments",
+  "fields" : [ {
+    "name" : "department_id",
+    "type" : [ "int", "null" ],
+    "columnName" : "department_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "department_name",
+    "type" : [ "string", "null" ],
+    "columnName" : "department_name",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "departments"
+}
+
+1.create a hive table avro with the schema above and import data using sqoop
+
+
+//Ejercicio 50
+
+{
+  "type" : "record",
+  "name" : "orders_partition",
+  "doc" : "Hive partitioned table schema ",
+  "fields" : [ {
+    "name" : "order_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_date",
+    "type" : [ "long", "null" ]
+  }, {
+    "name" : "order_customer_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_status",
+    "type" : [ "string", "null" ]
+  } ],
+  "tableName" : "orders_partition"
+}
+
+1.create a manage table from orders which is partitioned (order_month) using avro above
+2.create a manual partition 2014-02
+3.add data dynamically to the partition table
+
+//Ejercicio 52
+
+first_name,last_name,address,country,city,state,pincode,home,office,email,website
+
+1.create a table partition by state and country
+2.add data to the partition state=rj country=in
+3.create another table by state and country and insert dynamically with
+the first table
+
+//Ejercicio 53
+
+{
+  "type" : "record",
+  "name" : "orders_partition4",
+  "doc" : "Hive partitioned table schema ",
+  "fields" : [ {
+    "name" : "order_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_date",
+    "type" : [ "long", "null" ]
+  }, {
+    "name" : "order_customer_id",
+    "type" : [ "int", "null" ]
+  }, {
+    "name" : "order_status",
+    "type" : [ "string", "null" ]
+  } ],
+  "tableName" : "orders_partition4"
+}
+
+1.create a hive table with the above schema with two 
+columns order_value default value -99999, order_description default value
+"not defined" not null  in both new fields
+
+2. load data from orders
+
+
+//Ejercicio 54 
+
+1.using sqoop import join between categories and departments base
+on department_id
+
+//Ejercicio 55
+
+Purchase.txt
+1|Amit|Jain|Soap|299
+2|Ankur|Sharma|Detergent|480
+3|Avinash|Saha|Shampoo|560
+4|Anirudh|Makan|Brush|700
+5|Avinash|Temkar|Cloths|1060
+
+Wallet.txt
+1|799
+2|480
+3|790
+4|1000
+5|1200
+
+1.find a wallet balance less or equal to 500 (using spark and pig)
+
+//Ejercicio 56
+
+Name|SName|item|Price
+Amit|Jain|Soap|299
+Ankur|Sharma|Detergent|480
+Avinash|Saha|Shampoo|560
+Anirudh|Makan|Brush|700
+Avinash|Temkar|Cloths|1060
+Amit|Jain|Soap|399
+Ankur|Sharma|Detergent|560
+Avinash|Saha|Shampoo|730
+Anirudh|Makan|Brush|820
+Avinash|Temkar|Cloths|444
+Amit|Jain|Soap|555
+Ankur|Sharma|Detergent|666
+Avinash|Saha|Shampoo|777
+Anirudh|Makan|Brush|899
+Avinash|Temkar|Cloths|55
+
+1.remove duplicates from above fields
+
+//Ejercicio 57
+
+Name|SName|item|Price
+Amit|Jain|Soap|299
+Ankur|Sharma|Detergent|480
+Avinash|Saha|Shampoo|560
+Anirudh|Makan|Brush|700
+Avinash|Temkar|Cloths|1060
+Amit|Jain|Soap|399
+Ankur|Sharma|Detergent|560
+Avinash|Saha|Shampoo|730
+Anirudh|Makan|Brush|820
+Avinash|Temkar|Cloths|444
+Amit|Jain|Soap|555
+Ankur|Sharma|Detergent|666
+Avinash|Saha|Shampoo|777
+Anirudh|Makan|Brush|899
+Avinash|Temkar|Cloths|55
+
+1.order by name base on price and rank them as their position
+
+
+
+
+
+
+
+
+
+
