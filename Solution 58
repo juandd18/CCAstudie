@@ -1,0 +1,153 @@
+
+//Ejercicio 58
+
+job.properties
+
+oozie.use.system.libpath=True
+security_enabled=False
+dryrun=False
+jobTracker=localhost:8032
+nameNode=hdfs://quickstart.cloudera:8020
+oozie.wf.application.path=hdfs://quickstart.cloudera:8020/user/hue/oozie/workspaces/hue-oozie-1500994719.18 
+
+workflow.xml
+
+<workflow-app name="Problem_58" xmlns="uri:oozie:workflow:0.5">
+    <start to="sqoop-80b5"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="sqoop-80b5">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <command>import --connect &quot;jdbc:mysql://quickstart.cloudera:3306/retail_db&quot; --username root --password cloudera --table department_new --target-dir /user/ccp/oozie/problem58 --as-textfile -m 1</command>
+            <file>/user/oozie/share/lib/hive/mysql-connector-java.jar#mysql-connector-java.jar</file>
+        </sqoop>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
+
+
+oozie job -oozie http://quickstart.cloudera:11000/oozie -config job.properties -run
+
+oozie job -oozie http://localhost:11000/oozie -info 0000004-170725072624046-oozie-oozi-W
+
+//Ejercicio 59
+
+job.properties
+
+oozie.use.system.libpath=True
+security_enabled=False
+dryrun=False
+jobTracker=localhost:8032
+nameNode=hdfs://quickstart.cloudera:8020
+oozie.wf.application.path=hdfs://quickstart.cloudera:8020/user/hue/oozie/workspaces/hue-oozie-1500998634.48
+
+workflow.xml
+
+<workflow-app name="Problem_59" xmlns="uri:oozie:workflow:0.5">
+    <start to="sqoop-64c1"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="sqoop-64c1">
+        <sqoop xmlns="uri:oozie:sqoop-action:0.2">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <command>import --connect &quot;jdbc:mysql://quickstart.cloudera:3306/retail_db&quot; --username root --password cloudera --table department_new --target-dir /user/hive/warehouse/retail_dos.db/department_new --hive-import --hive-home /user/hive/warehouse --hive-table retail_dos.department_new --create-hive-table --split-by department_id</command>
+            <file>/user/oozie/share/lib/hive/mysql-connector-java.jar#mysql-connector-java.jar</file>
+            <file>/user/ccp/confOozie/hive-site.xml#hive-site.xml</file>
+        </sqoop>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
+
+//Ejercicio 60
+
+job.properties
+
+oozie.use.system.libpath=True
+security_enabled=False
+dryrun=False
+jobTracker=localhost:8032
+nameNode=hdfs://quickstart.cloudera:8020
+oozie.wf.application.path=hdfs://quickstart.cloudera:8020/user/hue/oozie/workspaces/hue-oozie-1501007003.12
+
+workflow.xml
+
+<workflow-app name="Problem60" xmlns="uri:oozie:workflow:0.5">
+    <start to="pig-4e99"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="pig-4e99">
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <script>/user/ccp/oozie/problem60/pigscript.pig</script>
+        </pig>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
+
+//Ejercicio 61
+
+job.properties
+
+oozie.use.system.libpath=True
+security_enabled=False
+dryrun=False
+jobTracker=localhost:8032
+nameNode=hdfs://quickstart.cloudera:8020
+oozie.wf.application.path=hdfs://quickstart.cloudera:8020/user/hue/oozie/workspaces/hue-oozie-1501008741.31
+
+workflow.xml
+
+<workflow-app name="Problem_61" xmlns="uri:oozie:workflow:0.5">
+    <start to="fs-51cc"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="fs-51cc">
+        <fs>
+              <mkdir path='${nameNode}/user/ccp/oozie/problem61'/>
+              <chmod path='${nameNode}/user/ccp/oozie/problem61' permissions='777' dir-files='false'>
+                <recursive/>
+              </chmod>
+              <touchz path='${nameNode}/user/ccp/oozie/problem61/text.txt'/>
+        </fs>
+        <ok to="fs-f743"/>
+        <error to="Kill"/>
+    </action>
+    <action name="fs-f743">
+        <fs>
+              <delete path='${nameNode}/user/ccp/oozie/problem61'/>
+        </fs>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <end name="End"/>
+</workflow-app>
+
+//ejercicio 62
+
+
+
+
+
+
+
+
+
+
+
+
+
+
