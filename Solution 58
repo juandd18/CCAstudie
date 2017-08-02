@@ -138,14 +138,17 @@ workflow.xml
 
 //ejercicio 62
 
-logs = LOAD '/user/ccp/oozie/problem62/data.log';
-flattenlogs = FOREACH logs GENERATE flatten(regex_extract_all($0,'(\\w+)\\s+(\\d+)\\s+(\\d+:\\d+:\\d+)\\s+(\\w+\\W*\\w*)\\s+(.*?\\:)\\s+(.*$)')) AS
-(month_name,day,time,node,process,log_message);
-store flattenlogs  into '$output' using PigStorage();
+CREATE TABLE retail_db.logs(month varchar(4), date INTEGER, time varchar(8), machineid varchar(15), processid varchar(15), logmessage varchar(100) );
 
-export --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table logs 
---driver com.mysql.jdbc.Driver  --export-dir /user/ccp/oozie/problem62/output --direct 
---columns "month_name,day,time,node,process,log_message" --fields-terminated-by ','
+logs = LOAD '/user/ccp/oozie/problem62/data.log';
+logsregex = FOREACH logs GENERATE FLATTEN(REGEX_EXTRACT_ALL($0,'(\\w+)\\s+(\\d+)\\s+(\\d+:\\d+:\\d+)\\s+(\\w+\\W*\\w*)\\s+(.*?\\:)\\s+(.*$)')) AS
+(month_name,day,time,node,process,log_message);
+store logsregex into '/user/ccp/oozie/problem62/output' using PigStorage(',');
+
+export --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table logs  
+--export-dir /user/ccp/oozie/problem62/output --direct --input-fields-terminated-by ',' 
+--columns "month,date,time,machineid,processid,logmessage"
+
 
 job.properties
 
@@ -155,8 +158,59 @@ requieredCount=1
 
 sqoopInputRecordCount='cat /user/ccp/oozie/problem62/output | wc -1'
 
+oozie.use.system.libpath=True
+security_enabled=False
+dryrun=False
+workspace_2dd5a23c-a911-0f7d-9ffd-73efcf9bfcf5=/user/hue/oozie/workspaces/hue-oozie-1501684691.83
+jobTracker=localhost:8032
+nameNode=hdfs://quickstart.cloudera:8020
+oozie.wf.application.path=hdfs://quickstart.cloudera:8020/user/hue/oozie/workspaces/hue-oozie-1501684398.88
 
+workflow.xml
 
+<workflow-app name="Problem_62" xmlns="uri:oozie:workflow:0.5">
+    <start to="decision-5bd4"/>
+    <kill name="Kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <action name="pig-13bd">
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                  <delete path="${nameNode}/user/ccp/oozie/problem62/output"/>
+            </prepare>
+            <script>/user/ccp/oozie/problem62/pigScript.pig</script>
+        </pig>
+        <ok to="subworkflow-26e0"/>
+        <error to="Kill"/>
+    </action>
+    <action name="subworkflow-26e0">
+        <sub-workflow>
+            <app-path>${nameNode}/user/hue/oozie/workspaces/hue-oozie-1501684691.83</app-path>
+              <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>hue-id-w</name>
+                    <value>159</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="End"/>
+        <error to="Kill"/>
+    </action>
+    <decision name="decision-5bd4">
+        <switch>
+            <case to="pig-13bd">
+              ${ fs:fileSize(&quot;/user/ccp/oozie/problem62/data.log&quot;) gt 0 }
+            </case>
+            <default to="End"/>
+        </switch>
+    </decision>
+    <end name="End"/>
+</workflow-app>
+
+//ejercicio 63
 
 
 
