@@ -143,6 +143,10 @@ flattenlogs = FOREACH logs GENERATE flatten(regex_extract_all($0,'(\\w+)\\s+(\\d
 (month_name,day,time,node,process,log_message);
 store flattenlogs  into '$output' using PigStorage();
 
+export --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table logs 
+--driver com.mysql.jdbc.Driver  --export-dir /user/ccp/oozie/problem62/output --direct 
+--columns "month_name,day,time,node,process,log_message" --fields-terminated-by ','
+
 job.properties
 
 output=/user/ccp/oozie/problem62/output
