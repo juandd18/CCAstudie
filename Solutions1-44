@@ -714,7 +714,7 @@ a1.sources.source1.type = exec
 a1.sources.source1.command = tail -F /home/cloudera/ccp/flume/dataproblem41.txt
 a1.sources.source1.interceptors = i1
 a1.sources.source1.interceptors.i1.type = regex_extractor
-a1.sources.source1.interceptors.i1.regex = ^male|female
+a1.sources.source1.interceptors.i1.regex = (\\bmale|female\\b)
 a1.sources.source1.interceptors.i1.serializer = t1
 a1.sources.source1.interceptors.i1.serializer.t1.name = multi
 
