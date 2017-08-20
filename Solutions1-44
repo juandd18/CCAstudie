@@ -647,7 +647,7 @@ a1.sources.source1.bind = localhost
 a1.sources.source1.port = 44444
 a1.sources.source1.interceptors = i1
 a1.sources.source1.interceptors.i1.type = regex_filter
-a1.sources.source1.interceptors.i1.regex = male
+a1.sources.source1.interceptors.i1.regex = \\bmale\\b
 
 # Describe the sink
 a1.sinks.sink1.type = hdfs
