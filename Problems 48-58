@@ -151,6 +151,198 @@ Avinash|Temkar|Cloths|55
 
 1.order by name base on price and rank them as their position
 
+//Ejercicio 58
+
+1. create a table in retail_db 
+departments_new(
+department_id int(11),
+department_name varchar(45),
+created_date timestamp default now()
+)
+2. insert data from departments to departments_new
+
+3.write a oozie which import data from departments_new to hdfs /user/ccp/oozie/problem58/data
+
+//Ejercicio 59
+
+1. create a table in retail_db 
+departments_exported(
+department_id int(11),
+department_name varchar(45),
+created_date timestamp default now()
+)
+
+2. export data from hdfs (/user/ccp/oozie/problem58/data) to departments_exported(
+
+//Ejercicio 60
+
+name,host,product,visit
+juan,cloudera.com,hive,23
+felipoe,facebook.com,impala,12
+maria,linkedin.com,hbase,7
+lucas,juna.com,link,11
+
+1. create a pig program which have visit more than 15 and order by visit
+2. create a oozie workflow to run the pig program.
+
+//Ejercicio 61
+
+1. create a oozie workflow
+  1.1 delete a destination folder
+  1.2 create a folder ("destination folder")
+  1.3 change permisson of the folder ()
+  
+//Ejercicio 62
+
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.0 create a table in mysql with month,day,date,node,process, message
+1. create a pig program which read the file above and store it in hdfs
+2. create a oozie workflow which verify that the file above has data
+  2.2 then run the pig program
+  2.3 call another workflow which should export the ouput of the pig progran
+      to the mysql
+
+//Ejercicio 63
+
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+July  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+July  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+July  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+July  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+July  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+July  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+July  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.0 create a table in mysql with month,day,date,node,process, message
+1. create a pig program which read the file above and store it in hdfs
+2. create a oozie workflow which verify that the file above has data
+  2.2 then run the pig program
+  2.3 call another workflow which should export the ouput of the pig progran
+      to the mysql
+  2.4 create another flow to import that data (from the mysql table just created )
+      to three different hive tables
+
+//Ejercicio 64
+
+1. create a oozie workflow to use flume spooldir to load data from local to hdfs
+
+//Ejercicio 65
+
+1. create a oozie workflow to import all tables of mysql to hive partition with 3 files
+
+//Ejercicio 66
+
+1. create a oozie workflow to import three tables using fork and join
+
+//Ejercicio 67 
+
+1. create a oozie workflow to import categories tables where category_id is between 1 and 10
+
+//Ejercicio 68
+
+1. create a oozie workflow 
+2. create a folder, two files
+3. move those file to another folder
+4. if is okey send a email
+
+//Ejercicio 69
+
+using oozie
+import a table changing the fields delimiter and lines delimiter
+
+//Ejercicio 70
+
+hadoopexam_jun16.log
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+hadoopexam_july16.log
+July  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+July  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+July  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+July  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+July  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+July  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+July  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+
+1. create a external hive table which load the files above using regex,
+2. creates a oozie workflow (hive action) which creates a new table
+
+//Ejercicio 71
+Revisar solucion
+
+//Ejercicio 72
+1. launch a schedule taks to run daily each five minutes from one date to another.
+//Ejercicio 73
+1. launch a schedule taks to run daily from one date to another.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
