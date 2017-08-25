@@ -23,7 +23,7 @@ TBLPROPERTIES(
 sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table orders --hive-import --hive-home /user/hive/warehouse --hive-table retail_dos.tmporders --create-hive-table
 
 insert into retail_dos.orders_partition partition(order_month)
-select order_id,unix_timestamp(order_date),order_customer_id,order_status,cast(month(order_date) as string) as order_month from tmporders; 
+select order_id,unix_timestamp(order_date),order_customer_id,order_status,cast(month(order_date) as string) as order_month from tmporders;
 
 drop table retail_dos.tmporders;
 
@@ -80,7 +80,7 @@ fields terminated by ','
 alter table retail_dos.personaInfo add partition (state='JR',country='IN')
 
 INSERT INTO retail_dos.personaInfo partition (state,country)
-select fname,lname,address,city,pincode,home,office,email,website,state,country from 
+select fname,lname,address,city,pincode,home,office,email,website,state,country from
 retail_dos.tmppersonaInfo ;
 
 drop table retail_dos.tmppersonaInfo;
@@ -115,7 +115,7 @@ drop table retail_dos.tmppersonaInfo;
   "tableName" : "orders_partition4"
 }
 
-sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table orders --target-dir /user/hive/warehouse/retail_dos.db/orders_partition4 --as-avrodatafile -m 1 
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera --table orders --target-dir /user/hive/warehouse/retail_dos.db/orders_partition4 --as-avrodatafile -m 1
 
 
 CREATE TABLE retail_dos.orders_partition4
@@ -127,8 +127,8 @@ TBLPROPERTIES(
 //ejercicio 54
 
 
-sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera 
---query "select * from categories c inner join departments d on c.category_department_id = d.department_id where \$CONDITIONS" 
+sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username root --password cloudera
+--query "select * from categories c inner join departments d on c.category_department_id = d.department_id where \$CONDITIONS"
 --target-dir /user/ccp/problem54 --as-textfile -m 1 --split-by department-id
 
 //ejercicio 55
@@ -136,7 +136,7 @@ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --usern
 purchase = LOAD '/user/ccp/problem55/problem55data.txt' USING PigStorage('|') as (id:long,name,sname,product,purchaseamount:int);
 wallet = LOAD '/user/ccp/problem55/problem55wallet.txt' USING PigStorage('|') as (id:long, walletamount:int);
 joinValues = JOIN purchase by id, wallet by id;
-joinFiltered = FILTERED joinValues by (walletamount - purchaseamount < 150)
+joinFiltered = FILTER joinValues by (walletamount - purchaseamount <= 100);
 STORE joinFiltered INTO '/user/ccp/problem55/problem55out/' USING PigStorage('|')
 
 ---scala spark
@@ -184,42 +184,17 @@ load data inpath '/user/ccp/problem56.txt' into table tmppurchase
 create table purchase as
 select name,sname,item,price from
 (
-select name,sname,item,price, rank(partition by name,sname,item order by price desc) as ranked from tmppurchase
+select name,sname,item,price, rank()  over(partition by name,sname,item order by price desc) as ranked from tmppurchase
 ) rank_table where rank_table.ranked = 1
 
 //ejercicio 57
 
 
-SELECT 
-s.RepName, s.Territory, s.Volume,
-rank() over(order by s.Volume desc) as rank
-from salesman s
-INNER JOIN 
-(select SalesRepId, sum(amount) as Volume from
-purchase group by SalesRepId) v
-WHERE s.RepId = v.SalesRepId
-order by v.Volume desc
+select s.repname,rank() over(order by venta.volume desc) ranksales from (
+select id,sum(salesamount) volume from purchase group by id
+) venta inner join saleman s on s.repid = venta.id
 
-SELECT 
-s.RepName, s.Territory, s.Volume,
-rank() over(partition by s.Territory order by s.Volume desc) as rank
-from salesman s
-INNER JOIN 
-(select SalesRepId, sum(amount) as Volume from
-purchase group by SalesRepId) v
-WHERE s.RepId = v.SalesRepId
-order by v.Volume desc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+select s.repname, s.territoryid, rank() over(partition by s.territoryid order by venta.volume desc) rank_ventas from
+(
+select id,sum(salesamount) volume from purchase group by id
+) venta inner join saleman s on s.repid = venta.id
