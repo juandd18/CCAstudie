@@ -24,6 +24,58 @@
 
 1.creates tables in hive with different compression codecs
 
+//Ejercicio 81
+
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.creates tables in hive and load the data above using regexserde
+2. replace the hadoopexam.com by juandavid.com regexp_replace
+
+//Ejercicio 82
+
+Jun  3 07:10:54 hadoopexam.com_node01 init: tty (/dev/tty6) main process (1208) killed by TERM signal
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: registered taskstats version 1
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: sr0: scsi3-mmc drive: 32x/32x xa/form2 tray
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: piix4_smbus 0000:00:07.0: SMBus base address uninitialized - upgrade BIOS or use force_addr=0xaddr
+Jun  3 07:11:31 hadoopexam.com_node01 kernel: nf_conntrack version 0.5.0 (7972 buckets, 31888 max)
+Jun  3 07:11:57 hadoopexam.com_node01 kernel: hrtimer: interrupt took 11250457 ns
+Jun  3 07:11:59 hadoopexam.com_node01 ntpd_initres[1705]: host name not found: 0.rhel.pool.ntp.org
+
+1.creates tables in hive and load the data above without regexserde load in one column
+2. use regexp_extract to fill a table in hive with the correct columns
+
+//ejercicio 83
+id,nameabre,telephone,name,lastname
+1,A B,(345)565-4565,arsrre,bertino
+2,B C,(345)565-4565,bert,cartz
+3,C D,(345)565-4565,ciloj,derta
+4,D E,(345)565-4565,dorothy,elen
+
+1. replace nameabre with the real name
+A J --> Amit Jain
+N S --> Nitin Shah
+A Kumar S --> Avinash Kumar Shah
+2.phone number (345)565-4565 change to 3455654565.
+
+//Ejercicio 84
+
+1. using sqoop import the orders table but each file has to have at least 50000 records only.
+
+//Ejercicio 85
+
+using flume
+You will be given small files on Unix platform.
+You have to transfer these files to HDFS in a given directory.
+You have to accumulate data from input files.
+Collect all the data and save it in big HDFS files/directory.
+Each file/directory should contain at least 50,000 records.
+
 //Ejercicio 50
 
 {
