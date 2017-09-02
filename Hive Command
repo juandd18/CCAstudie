@@ -165,3 +165,23 @@ TBLPROPERTIES (
 "xmlinput.start"="<record customer",
 "xmlinput.end"="</record>"
 );
+
+//read in spark json
+
+val filejson = sqlContext.read.json("/user/ccp/hive/jsonfile.json")
+
+val jsonRDD = sc.wholeTextFiles("/user/ccp/hive/jsonfile.txt").map(x => x._2)
+
+import org.apache.spark.sql.types._
+
+val schemad = StructType( List(
+  StructField("_id",StructType(List(StructField("$oid", StringType, nullable = true)) )),
+  StructField("product_name", StringType, nullable = true),
+  StructField("supplier", StringType, nullable = true),
+  StructField("quantity", DoubleType, nullable = true),
+  StructField("unit_cost", StringType, nullable = true)
+))
+
+
+val filejson = sqlContext.read.schema(schemad).json(jsonRDD).toDF()
+filejson.show()
